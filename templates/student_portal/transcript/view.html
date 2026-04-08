@@ -1,0 +1,106 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Academic Transcript' %}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">{% trans 'Academic Transcript' %}</h2>
+        <div class="btn-group">
+            <a href="{% url 'student_portal:student_download_transcript' %}?format=pdf" class="btn btn-outline-danger">
+                <i class="bi bi-file-pdf"></i> {% trans 'PDF' %}
+            </a>
+            <a href="{% url 'student_portal:student_download_transcript' %}?format=excel" class="btn btn-outline-success">
+                <i class="bi bi-file-excel"></i> {% trans 'Excel' %}
+            </a>
+        </div>
+    </div>
+
+    <!-- Student Info -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>{{ student.get_full_name }}</h5>
+                    <p class="mb-1"><strong>{% trans 'Student ID:' %}</strong> {{ student.student_no }}</p>
+                    <p class="mb-1"><strong>{% trans 'Program:' %}</strong> {{ student.program.name_en|default:'-' }}</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h4 class="text-primary">CGPA: {{ final_cgpa }}</h4>
+                    <p class="mb-1"><strong>{% trans 'Total Credits Earned:' %}</strong> {{ total_credits }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transcript by Semester -->
+    {% for semester_data in transcript_data %}
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">{{ semester_data.semester.display_name }}</h5>
+            <div>
+                <span class="badge bg-light text-dark me-2">{% trans 'GPA:' %} {{ semester_data.semester_gpa }}</span>
+                <span class="badge bg-info">{% trans 'CGPA:' %} {{ semester_data.cgpa }}</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>{% trans 'Course Code' %}</th>
+                        <th>{% trans 'Course Title' %}</th>
+                        <th class="text-center">{% trans 'Credits' %}</th>
+                        <th class="text-center">{% trans 'Grade' %}</th>
+                        <th class="text-center">{% trans 'Points' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enrollment in semester_data.courses %}
+                    <tr>
+                        <td>{{ enrollment.course_offering.course.code }}</td>
+                        <td>{{ enrollment.course_offering.course.get_title }}</td>
+                        <td class="text-center">{{ enrollment.course_offering.course.credit_hours }}</td>
+                        <td class="text-center">
+                            <span class="badge bg-{% if enrollment.pass_fail_status == 'pass' %}success{% else %}danger{% endif %}">
+                                {{ enrollment.final_result.letter_grade }}
+                            </span>
+                        </td>
+                        <td class="text-center">{{ enrollment.final_result.grade_point }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="table-light">
+                    <tr>
+                        <td colspan="2" class="text-end"><strong>{% trans 'Semester Summary:' %}</strong></td>
+                        <td class="text-center"><strong>{{ semester_data.semester_credits }}</strong></td>
+                        <td class="text-center" colspan="2"><strong>{% trans 'GPA:' %} {{ semester_data.semester_gpa }}</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-info">{% trans 'No completed courses with published results available.' %}</div>
+    {% endfor %}
+
+    <!-- Final Summary -->
+    {% if transcript_data %}
+    <div class="card">
+        <div class="card-body text-center">
+            <h5>{% trans 'Academic Standing' %}</h5>
+            <p class="mb-1"><strong>{% trans 'Cumulative GPA (CGPA):' %}</strong> {{ final_cgpa }}</p>
+            <p class="mb-1"><strong>{% trans 'Total Credits Earned:' %}</strong> {{ total_credits }}</p>
+            <p class="mb-0">
+                {% if final_cgpa >= 2.0 %}
+                    <span class="badge bg-success">{% trans 'Good Standing' %}</span>
+                {% else %}
+                    <span class="badge bg-warning">{% trans 'Academic Probation' %}</span>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

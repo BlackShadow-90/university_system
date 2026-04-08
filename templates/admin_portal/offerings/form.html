@@ -1,0 +1,154 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% if form.instance.pk %}{% trans "Edit Course Offering" %}{% else %}{% trans "Add Course Offering" %}{% endif %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_offerings' %}">{% trans "Course Offerings" %}</a></li>
+<li class="breadcrumb-item active">{% if form.instance.pk %}{% trans "Edit" %}{% else %}{% trans "Add" %}{% endif %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% if form.instance.pk %}{% trans "Edit Course Offering" %}{% else %}{% trans "Add Course Offering" %}{% endif %}</h2>
+    <a href="{% url 'admin_portal:admin_offerings' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>{% trans "Back to Offerings" %}
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="id_course" class="form-label">{% trans "Course" %} *</label>
+                    <select name="course" id="id_course" class="form-select" required>
+                        <option value="">{% trans "Select course..." %}</option>
+                        {% for course in courses %}
+                        <option value="{{ course.pk }}" {% if form.instance.course_id == course.pk %}selected{% endif %}>
+                            {{ course.code }} - {{ course.get_title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="id_semester" class="form-label">{% trans "Semester" %} *</label>
+                    <select name="semester" id="id_semester" class="form-select" required>
+                        <option value="">{% trans "Select semester..." %}</option>
+                        {% for semester in semesters %}
+                        <option value="{{ semester.pk }}" {% if form.instance.semester_id == semester.pk %}selected{% endif %}>
+                            {{ semester.name_en }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="id_teacher" class="form-label">{% trans "Instructor" %} *</label>
+                    <select name="teacher" id="id_teacher" class="form-select" required>
+                        <option value="">{% trans "Select teacher..." %}</option>
+                        {% for teacher in teachers %}
+                        <option value="{{ teacher.pk }}" {% if form.instance.teacher_id == teacher.pk %}selected{% endif %}>
+                            {{ teacher.user.get_full_name }} ({{ teacher.teacher_no }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="id_section_name" class="form-label">{% trans "Section" %} *</label>
+                    <input type="text" name="section_name" id="id_section_name" class="form-control" 
+                           value="{% if request.method == 'POST' %}{{ request.POST.section_name }}{% else %}{{ form.instance.section_name|default:'01' }}{% endif %}" 
+                           placeholder="{% trans 'e.g., 01, 02, A, B' %}" required>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="id_room" class="form-label">{% trans "Classroom" %}</label>
+                    <input type="text" name="room" id="id_room" class="form-control" 
+                           value="{% if request.method == 'POST' %}{{ request.POST.room }}{% else %}{{ form.instance.room|default:'' }}{% endif %}" 
+                           placeholder="{% trans 'e.g., Room 101' %}">
+                </div>
+                
+                <div class="col-md-4 mb-3">
+                    <label for="id_day_of_week" class="form-label">{% trans "Day of Week" %}</label>
+                    <select name="day_of_week" id="id_day_of_week" class="form-select">
+                        <option value="">{% trans "Select day..." %}</option>
+                        <option value="mon" {% if request.method == 'POST' %}{% if request.POST.day_of_week == 'mon' %}selected{% endif %}{% else %}{% if form.instance.day_of_week == 'mon' %}selected{% endif %}{% endif %}>{% trans "Monday" %}</option>
+                        <option value="tue" {% if request.method == 'POST' %}{% if request.POST.day_of_week == 'tue' %}selected{% endif %}{% else %}{% if form.instance.day_of_week == 'tue' %}selected{% endif %}{% endif %}>{% trans "Tuesday" %}</option>
+                        <option value="wed" {% if request.method == 'POST' %}{% if request.POST.day_of_week == 'wed' %}selected{% endif %}{% else %}{% if form.instance.day_of_week == 'wed' %}selected{% endif %}{% endif %}>{% trans "Wednesday" %}</option>
+                        <option value="thu" {% if request.method == 'POST' %}{% if request.POST.day_of_week == 'thu' %}selected{% endif %}{% else %}{% if form.instance.day_of_week == 'thu' %}selected{% endif %}{% endif %}>{% trans "Thursday" %}</option>
+                        <option value="fri" {% if request.method == 'POST' %}{% if request.POST.day_of_week == 'fri' %}selected{% endif %}{% else %}{% if form.instance.day_of_week == 'fri' %}selected{% endif %}{% endif %}>{% trans "Friday" %}</option>
+                        <option value="sat" {% if request.method == 'POST' %}{% if request.POST.day_of_week == 'sat' %}selected{% endif %}{% else %}{% if form.instance.day_of_week == 'sat' %}selected{% endif %}{% endif %}>{% trans "Saturday" %}</option>
+                        <option value="sun" {% if request.method == 'POST' %}{% if request.POST.day_of_week == 'sun' %}selected{% endif %}{% else %}{% if form.instance.day_of_week == 'sun' %}selected{% endif %}{% endif %}>{% trans "Sunday" %}</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-4 mb-3">
+                    <label for="id_status" class="form-label">{% trans "Status" %} *</label>
+                    <select name="status" id="id_status" class="form-select" required>
+                        <option value="draft" {% if request.method == 'POST' %}{% if request.POST.status == 'draft' %}selected{% endif %}{% else %}{% if form.instance.status == 'draft' %}selected{% endif %}{% endif %}>{% trans "Draft" %}</option>
+                        <option value="open" {% if request.method == 'POST' %}{% if request.POST.status == 'open' %}selected{% endif %}{% else %}{% if form.instance.status == 'open' %}selected{% endif %}{% endif %}>{% trans "Open for Registration" %}</option>
+                        <option value="in_progress" {% if request.method == 'POST' %}{% if request.POST.status == 'in_progress' %}selected{% endif %}{% else %}{% if form.instance.status == 'in_progress' %}selected{% endif %}{% endif %}>{% trans "In Progress" %}</option>
+                        <option value="grading" {% if request.method == 'POST' %}{% if request.POST.status == 'grading' %}selected{% endif %}{% else %}{% if form.instance.status == 'grading' %}selected{% endif %}{% endif %}>{% trans "Grading" %}</option>
+                        <option value="completed" {% if request.method == 'POST' %}{% if request.POST.status == 'completed' %}selected{% endif %}{% else %}{% if form.instance.status == 'completed' %}selected{% endif %}{% endif %}>{% trans "Completed" %}</option>
+                        <option value="cancelled" {% if request.method == 'POST' %}{% if request.POST.status == 'cancelled' %}selected{% endif %}{% else %}{% if form.instance.status == 'cancelled' %}selected{% endif %}{% endif %}>{% trans "Cancelled" %}</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="id_start_time" class="form-label">{% trans "Start Time" %}</label>
+                    <input type="time" name="start_time" id="id_start_time" class="form-control" 
+                           value="{% if form.instance.start_time %}{{ form.instance.start_time|time:'H:i' }}{% elif request.method == 'POST' %}{{ request.POST.start_time }}{% endif %}">
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="id_end_time" class="form-label">{% trans "End Time" %}</label>
+                    <input type="time" name="end_time" id="id_end_time" class="form-control" 
+                           value="{% if form.instance.end_time %}{{ form.instance.end_time|time:'H:i' }}{% elif request.method == 'POST' %}{{ request.POST.end_time }}{% endif %}">
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="id_capacity" class="form-label">{% trans "Capacity" %} *</label>
+                    <input type="number" name="capacity" id="id_capacity" class="form-control" 
+                           value="{% if request.method == 'POST' %}{{ request.POST.capacity }}{% else %}{{ form.instance.capacity|default:30 }}{% endif %}" 
+                           min="1" max="500" required>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="id_capacity" class="form-label">{% trans "Enrollment Count" %}</label>
+                    <input type="number" name="enrollment_count" id="id_enrollment_count" class="form-control" 
+                           value="{% if request.method == 'POST' %}{{ request.POST.enrollment_count }}{% else %}{{ form.instance.enrollment_count|default:0 }}{% endif %}" 
+                           min="0" max="500" readonly>
+                    <div class="form-text">{% trans "Automatically updated when students enroll" %}</div>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="id_description" class="form-label">{% trans "Description" %}</label>
+                <textarea name="description" id="id_description" class="form-control" rows="3" placeholder="{% trans 'Additional notes about this course offering...' %}">{% if request.method == 'POST' %}{{ request.POST.description }}{% else %}{{ form.instance.description|default:'' }}{% endif %}</textarea>
+            </div>
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-circle me-1"></i>{% trans "Save" %}
+                </button>
+                <a href="{% url 'admin_portal:admin_offerings' %}" class="btn btn-outline-secondary">
+                    {% trans "Cancel" %}
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

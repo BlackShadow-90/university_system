@@ -1,0 +1,106 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% if form.instance.pk %}{% trans "Edit Semester" %}{% else %}{% trans "Add Semester" %}{% endif %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_semesters' %}">{% trans "Semesters" %}</a></li>
+<li class="breadcrumb-item active">{% if form.instance.pk %}{% trans "Edit" %}{% else %}{% trans "Add" %}{% endif %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% if form.instance.pk %}{% trans "Edit Semester" %}{% else %}{% trans "Add New Semester" %}{% endif %}</h2>
+    <a href="{% url 'admin_portal:admin_semesters' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>{% trans "Back" %}
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Academic Year" %}</label>
+                    <input type="text" name="academic_year" class="form-control" value="{{ form.academic_year.value|default:'' }}" placeholder="2024-2025" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Semester Type" %}</label>
+                    <select name="semester_type" class="form-select" required>
+                        <option value="">{% trans "Select Type" %}</option>
+                        <option value="spring" {% if form.semester_type.value == 'spring' %}selected{% endif %}>{% trans "Spring" %}</option>
+                        <option value="summer" {% if form.semester_type.value == 'summer' %}selected{% endif %}>{% trans "Summer" %}</option>
+                        <option value="fall" {% if form.semester_type.value == 'fall' %}selected{% endif %}>{% trans "Fall" %}</option>
+                        <option value="winter" {% if form.semester_type.value == 'winter' %}selected{% endif %}>{% trans "Winter" %}</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Semester Name (English)" %}</label>
+                    <input type="text" name="name_en" class="form-control" value="{{ form.name_en.value|default:'' }}">
+                    <small class="form-text text-muted">{% trans "Auto-generated if left blank" %}</small>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Semester Name (Chinese)" %}</label>
+                    <input type="text" name="name_zh" class="form-control" value="{{ form.name_zh.value|default:'' }}">
+                    <small class="form-text text-muted">{% trans "Auto-generated if left blank" %}</small>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">{% trans "Start Date" %}</label>
+                    <input type="date" name="start_date" class="form-control" value="{{ form.start_date.value|default:''|date:'Y-m-d' }}" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">{% trans "End Date" %}</label>
+                    <input type="date" name="end_date" class="form-control" value="{{ form.end_date.value|default:''|date:'Y-m-d' }}" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">{% trans "Status" %}</label>
+                    <select name="status" class="form-select" required>
+                        <option value="upcoming" {% if form.status.value == 'upcoming' %}selected{% endif %}>{% trans "Upcoming" %}</option>
+                        <option value="active" {% if form.status.value == 'active' %}selected{% endif %}>{% trans "Active" %}</option>
+                        <option value="completed" {% if form.status.value == 'completed' %}selected{% endif %}>{% trans "Completed" %}</option>
+                        <option value="archived" {% if form.status.value == 'archived' %}selected{% endif %}>{% trans "Archived" %}</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">{% trans "Is Active" %}</label>
+                    <div class="form-check mt-2">
+                        <input type="checkbox" name="is_active" class="form-check-input" id="is_active" {% if form.is_active.value %}checked{% endif %}>
+                        <label class="form-check-label" for="is_active">{% trans "Active Semester" %}</label>
+                    </div>
+                </div>
+            </div>
+            
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                <strong>{% trans "Please correct the errors below:" %}</strong>
+                <ul class="mb-0">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ field }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg me-1"></i>{% trans "Save Semester" %}
+                </button>
+                <a href="{% url 'admin_portal:admin_semesters' %}" class="btn btn-outline-secondary">
+                    {% trans "Cancel" %}
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

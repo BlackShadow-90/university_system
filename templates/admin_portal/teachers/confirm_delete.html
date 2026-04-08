@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Delete Teacher" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_teachers' %}">{% trans "Teachers" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Delete" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>{% trans "Confirm Deletion" %}</h5>
+            </div>
+            <div class="card-body p-4 text-center">
+                <p class="text-muted mb-4">
+                    {% trans "Are you sure you want to delete the following teacher?" %}
+                </p>
+                
+                <div class="alert alert-light border mb-4">
+                    <h5>{{ object.user.full_name_en }}</h5>
+                    <p class="mb-0 text-muted">{{ object.teacher_no }}</p>
+                </div>
+                
+                <p class="text-danger small mb-4">
+                    <i class="bi bi-info-circle me-1"></i>
+                    {% trans "This action cannot be undone. The teacher record and associated user account will be permanently deleted." %}
+                </p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a href="{% url 'admin_portal:admin_teachers' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-lg me-1"></i>{% trans "Cancel" %}
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>{% trans "Delete" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

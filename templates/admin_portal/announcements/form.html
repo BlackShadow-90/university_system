@@ -1,0 +1,157 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% if form.instance.pk %}{% trans "Edit Announcement" %}{% else %}{% trans "Add Announcement" %}{% endif %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_announcements' %}">{% trans "Announcements" %}</a></li>
+<li class="breadcrumb-item active">{% if form.instance.pk %}{% trans "Edit" %}{% else %}{% trans "Add" %}{% endif %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% if form.instance.pk %}{% trans "Edit Announcement" %}{% else %}{% trans "Add New Announcement" %}{% endif %}</h2>
+    <a href="{% url 'admin_portal:admin_announcements' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>{% trans "Back" %}
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <h5 class="mb-3">{% trans "Basic Information" %}</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Title (English)" %} *</label>
+                    <input type="text" name="title_en" class="form-control" value="{% if request.method == 'POST' %}{{ request.POST.title_en }}{% else %}{{ form.instance.title_en|default:'' }}{% endif %}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Title (Chinese)" %}</label>
+                    <input type="text" name="title_zh" class="form-control" value="{% if request.method == 'POST' %}{{ request.POST.title_zh }}{% else %}{{ form.instance.title_zh|default:'' }}{% endif %}">
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Priority" %}</label>
+                    <select name="priority" class="form-select">
+                        <option value="low" {% if request.method == 'POST' %}{% if request.POST.priority == 'low' %}selected{% endif %}{% else %}{% if form.instance.priority == 'low' %}selected{% endif %}{% endif %}>{% trans "Low" %}</option>
+                        <option value="normal" {% if request.method == 'POST' %}{% if request.POST.priority == 'normal' %}selected{% endif %}{% else %}{% if form.instance.priority == 'normal' %}selected{% endif %}{% endif %}>{% trans "Normal" %}</option>
+                        <option value="high" {% if request.method == 'POST' %}{% if request.POST.priority == 'high' %}selected{% endif %}{% else %}{% if form.instance.priority == 'high' %}selected{% endif %}{% endif %}>{% trans "High" %}</option>
+                        <option value="urgent" {% if request.method == 'POST' %}{% if request.POST.priority == 'urgent' %}selected{% endif %}{% else %}{% if form.instance.priority == 'urgent' %}selected{% endif %}{% endif %}>{% trans "Urgent" %}</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Target Audience" %}</label>
+                    <select name="target_role" class="form-select">
+                        <option value="all" {% if request.method == 'POST' %}{% if request.POST.target_role == 'all' %}selected{% endif %}{% else %}{% if form.instance.target_role == 'all' %}selected{% endif %}{% endif %}>{% trans "All Users" %}</option>
+                        <option value="students" {% if request.method == 'POST' %}{% if request.POST.target_role == 'students' %}selected{% endif %}{% else %}{% if form.instance.target_role == 'students' %}selected{% endif %}{% endif %}>{% trans "Students Only" %}</option>
+                        <option value="teachers" {% if request.method == 'POST' %}{% if request.POST.target_role == 'teachers' %}selected{% endif %}{% else %}{% if form.instance.target_role == 'teachers' %}selected{% endif %}{% endif %}>{% trans "Teachers Only" %}</option>
+                        <option value="admin" {% if request.method == 'POST' %}{% if request.POST.target_role == 'admin' %}selected{% endif %}{% else %}{% if form.instance.target_role == 'admin' %}selected{% endif %}{% endif %}>{% trans "Administrators Only" %}</option>
+                    </select>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <h5 class="mb-3">{% trans "Content" %}</h5>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label">{% trans "Content (English)" %} *</label>
+                    <textarea name="content_en" class="form-control" rows="6" required>{% if request.method == 'POST' %}{{ request.POST.content_en }}{% else %}{{ form.instance.content_en|default:'' }}{% endif %}</textarea>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label">{% trans "Content (Chinese)" %}</label>
+                    <textarea name="content_zh" class="form-control" rows="6">{% if request.method == 'POST' %}{{ request.POST.content_zh }}{% else %}{{ form.instance.content_zh|default:'' }}{% endif %}</textarea>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Summary (English)" %}</label>
+                    <textarea name="summary_en" class="form-control" rows="2" placeholder="{% trans 'Short summary for preview cards (optional)' %}">{% if request.method == 'POST' %}{{ request.POST.summary_en }}{% else %}{{ form.instance.summary_en|default:'' }}{% endif %}</textarea>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Summary (Chinese)" %}</label>
+                    <textarea name="summary_zh" class="form-control" rows="2">{% if request.method == 'POST' %}{{ request.POST.summary_zh }}{% else %}{{ form.instance.summary_zh|default:'' }}{% endif %}</textarea>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <h5 class="mb-3">{% trans "Publishing Options" %}</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Published At" %}</label>
+                    <input type="datetime-local" name="published_at" class="form-control" 
+                           value="{% if form.instance.published_at %}{{ form.instance.published_at|date:'Y-m-d\TH:i' }}{% elif request.method == 'POST' %}{{ request.POST.published_at }}{% endif %}">
+                    <small class="form-text text-muted">{% trans "Leave empty to publish immediately" %}</small>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Expires At" %}</label>
+                    <input type="datetime-local" name="expires_at" class="form-control"
+                           value="{% if form.instance.expires_at %}{{ form.instance.expires_at|date:'Y-m-d\TH:i' }}{% elif request.method == 'POST' %}{{ request.POST.expires_at }}{% endif %}">
+                    <small class="form-text text-muted">{% trans "Leave empty for no expiration" %}</small>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input type="checkbox" name="is_pinned" class="form-check-input" id="is_pinned" 
+                               {% if request.method == 'POST' %}{% if request.POST.is_pinned %}checked{% endif %}{% else %}{% if form.instance.is_pinned %}checked{% endif %}{% endif %}>
+                        <label class="form-check-label" for="is_pinned">{% trans "Pin to top of list" %}</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input type="checkbox" name="is_active" class="form-check-input" id="is_active" 
+                               {% if request.method == 'POST' %}{% if request.POST.is_active %}checked{% endif %}{% else %}{% if form.instance.is_active|default_if_none:True %}checked{% endif %}{% endif %}>
+                        <label class="form-check-label" for="is_active">{% trans "Active" %}</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Attachment" %}</label>
+                    <input type="file" name="attachment" class="form-control">
+                    {% if form.instance.attachment %}
+                    <small class="form-text text-muted">
+                        {% trans "Current file:" %} <a href="{{ form.instance.attachment.url }}" target="_blank">{{ form.instance.attachment.name }}</a>
+                    </small>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                <strong>{% trans "Please correct the errors below:" %}</strong>
+                <ul class="mb-0">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ field }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg me-1"></i>{% trans "Save Announcement" %}
+                </button>
+                <a href="{% url 'admin_portal:admin_announcements' %}" class="btn btn-outline-secondary">
+                    {% trans "Cancel" %}
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

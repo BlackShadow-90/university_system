@@ -1,0 +1,64 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Departments" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Departments" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Department Management" %}</h2>
+    <a href="{% url 'admin_portal:admin_department_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>{% trans "Add Department" %}
+    </a>
+</div>
+
+<!-- Departments Grid -->
+<div class="row g-4">
+    {% for department in departments %}
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{{ department.code }}</h5>
+                {% if department.status == 'active' %}
+                <span class="badge bg-success">{% trans "Active" %}</span>
+                {% else %}
+                <span class="badge bg-secondary">{% trans "Inactive" %}</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <h6>{{ department.name_en }}</h6>
+                {% if department.name_zh %}
+                <p class="text-muted small">{{ department.name_zh }}</p>
+                {% endif %}
+                <hr>
+                <div class="d-flex justify-content-between text-muted small">
+                    <span><i class="bi bi-people me-1"></i>{{ department.students.count }} {% trans "Students" %}</span>
+                    <span><i class="bi bi-person-badge me-1"></i>{{ department.teachers.count }} {% trans "Teachers" %}</span>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent">
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'admin_portal:admin_department_edit' department.pk %}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-pencil me-1"></i>{% trans "Edit" %}
+                    </a>
+                    <a href="{% url 'admin_portal:admin_department_delete' department.pk %}" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash me-1"></i>{% trans "Delete" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="text-center text-muted py-5">
+            <i class="bi bi-building display-4 d-block mb-3"></i>
+            <p>{% trans "No departments found. Create your first department to get started." %}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

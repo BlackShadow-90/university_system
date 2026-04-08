@@ -1,0 +1,117 @@
+{% extends 'teacher_portal/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'My Announcements' %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="h3 mb-2">{% trans 'My Announcements' %}</h1>
+            <p class="text-muted">{% trans 'Manage announcements for your course students' %}</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'teacher_portal:teacher_announcement_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> {% trans 'New Announcement' %}
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">{% trans 'Announcement List' %}</h5>
+                </div>
+                <div class="card-body">
+                    {% if announcements %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>{% trans 'Title' %}</th>
+                                        <th>{% trans 'Target Audience' %}</th>
+                                        <th>{% trans 'Status' %}</th>
+                                        <th>{% trans 'Published' %}</th>
+                                        <th>{% trans 'Actions' %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for announcement in announcements %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ announcement.title }}</strong>
+                                        </td>
+                                        <td>
+                                            {% if announcement.target_audience %}
+                                                {{ announcement.target_audience.course.code }} - {{ announcement.target_audience.section }}
+                                            {% else %}
+                                                <span class="text-muted">{% trans 'All Students' %}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if announcement.is_active %}
+                                                <span class="badge bg-success">{% trans 'Active' %}</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">{% trans 'Inactive' %}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ announcement.published_at|date:"Y-m-d H:i" }}</td>
+                                        <td>
+                                            <a href="{% url 'teacher_portal:teacher_announcement_edit' announcement.pk %}" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'teacher_portal:teacher_announcement_delete' announcement.pk %}" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        {% if is_paginated %}
+                        <nav aria-label="Page navigation" class="mt-3">
+                            <ul class="pagination justify-content-center">
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% trans 'Previous' %}</a>
+                                    </li>
+                                {% endif %}
+                                <li class="page-item active">
+                                    <span class="page-link">{% trans 'Page' %} {{ page_obj.number }} {% trans 'of' %} {{ page_obj.paginator.num_pages }}</span>
+                                </li>
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans 'Next' %}</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-bullhorn fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">{% trans 'No Announcements Yet' %}</h5>
+                            <p class="text-muted">{% trans 'Create announcements to communicate with your students.' %}</p>
+                            <a href="{% url 'teacher_portal:teacher_announcement_create' %}" class="btn btn-primary">
+                                {% trans 'Create First Announcement' %}
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <a href="{% url 'teacher_portal:teacher_dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> {% trans 'Back to Dashboard' %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

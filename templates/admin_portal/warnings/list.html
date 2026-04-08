@@ -1,0 +1,156 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Warnings" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Warnings" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Early Warning System" %}</h2>
+    <div>
+        <a href="{% url 'admin_portal:admin_manual_warning' %}" class="btn btn-danger me-2">
+            <i class="bi bi-plus-circle me-1"></i>{% trans "Manual Warning" %}
+        </a>
+        <a href="{% url 'admin_portal:admin_warning_rules' %}" class="btn btn-outline-primary me-2">
+            <i class="bi bi-gear me-1"></i>{% trans "Rules" %}
+        </a>
+        <form method="post" action="{% url 'admin_portal:admin_calculate_warnings' %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-warning">
+                <i class="bi bi-calculator me-1"></i>{% trans "Calculate All" %}
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Warning Summary Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <h3 class="mb-1">{{ green_count|default:"0" }}</h3>
+                <p class="mb-0">{% trans "Green (Stable)" %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark">
+            <div class="card-body text-center">
+                <h3 class="mb-1">{{ yellow_count|default:"0" }}</h3>
+                <p class="mb-0">{% trans "Yellow (Mild)" %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-orange text-white" style="background-color: #fd7e14;">
+            <div class="card-body text-center">
+                <h3 class="mb-1">{{ orange_count|default:"0" }}</h3>
+                <p class="mb-0">{% trans "Orange (Serious)" %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body text-center">
+                <h3 class="mb-1">{{ red_count|default:"0" }}</h3>
+                <p class="mb-0">{% trans "Red (Critical)" %}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Warnings Table -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>{% trans "Warning Results" %}</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>{% trans "Student" %}</th>
+                        <th>{% trans "Semester" %}</th>
+                        <th>{% trans "Risk Score" %}</th>
+                        <th>{% trans "Level" %}</th>
+                        <th>{% trans "Risk Factors" %}</th>
+                        <th>{% trans "Generated" %}</th>
+                        <th>{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for warning in warnings %}
+                    <tr>
+                        <td>
+                            <strong>{{ warning.student.student_no }}</strong><br>
+                            <small class="text-muted">{{ warning.student.user.get_full_name }}</small>
+                        </td>
+                        <td>{{ warning.semester.name_en }}</td>
+                        <td>
+                            {% with score=warning.risk_score|default:0 %}
+                            <div class="d-flex align-items-center">
+                                <div class="progress flex-grow-1 me-2" style="height: 8px; width: 60px;">
+                                    <div class="progress-bar bg-{% if warning.warning_level == 'red' %}danger{% elif warning.warning_level == 'orange' %}warning{% elif warning.warning_level == 'yellow' %}warning{% else %}success{% endif %}" 
+                                         style="width: 0%" data-score="{{ score }}"></div>
+                                </div>
+                                <span class="small">{{ warning.risk_score }}</span>
+                            </div>
+                            {% endwith %}
+                        </td>
+                        <td>
+                            {% if warning.warning_level == 'green' %}
+                            <span class="badge bg-success">{% trans "Green" %}</span>
+                            {% elif warning.warning_level == 'yellow' %}
+                            <span class="badge bg-warning text-dark">{% trans "Yellow" %}</span>
+                            {% elif warning.warning_level == 'orange' %}
+                            <span class="badge" style="background-color: #fd7e14;">{% trans "Orange" %}</span>
+                            {% else %}
+                            <span class="badge bg-danger">{% trans "Red" %}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if warning.risk_factors %}
+                            <ul class="list-unstyled mb-0 small">
+                                {% for factor in warning.risk_factors %}
+                                <li><i class="bi bi-dot"></i>{{ factor.name }}: {{ factor.description }}</li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ warning.generated_at|date:"M d, Y H:i" }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                {% if warning.warning_level != 'green' %}
+                                <form method="post" action="{% url 'admin_portal:admin_clear_warning' warning.pk %}" class="d-inline" onsubmit="return confirm('Clear this warning?')">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-success" title="{% trans 'Clear Warning' %}">
+                                        <i class="bi bi-check-circle"></i>
+                                    </button>
+                                </form>
+                                {% endif %}
+                                <a href="{% url 'admin_portal:admin_manual_warning' %}?student={{ warning.student.pk }}" class="btn btn-outline-primary" title="{% trans 'Add Manual Warning' %}">
+                                    <i class="bi bi-plus-circle"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                            {% trans "No warning results found. Run calculation to generate warnings." %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

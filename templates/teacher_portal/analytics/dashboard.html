@@ -1,0 +1,106 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Performance Analytics" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="/teacher-portal/">{% trans "Teacher Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Performance Analytics" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Performance Analytics" %}</h2>
+</div>
+
+<!-- Summary Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="stat-icon bg-primary bg-opacity-10 text-primary mx-auto mb-3">
+                    <i class="bi bi-book"></i>
+                </div>
+                <h3 class="mb-1">{{ total_courses|default:"0" }}</h3>
+                <p class="text-muted mb-0">{% trans "Total Courses" %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="stat-icon bg-info bg-opacity-10 text-info mx-auto mb-3">
+                    <i class="bi bi-people"></i>
+                </div>
+                <h3 class="mb-1">{{ total_students|default:"0" }}</h3>
+                <p class="text-muted mb-0">{% trans "Total Students" %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="stat-icon bg-success bg-opacity-10 text-success mx-auto mb-3">
+                    <i class="bi bi-graph-up"></i>
+                </div>
+                <h3 class="mb-1">{{ avg_pass_rate|default:"0" }}%</h3>
+                <p class="text-muted mb-0">{% trans "Pass Rate" %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="stat-icon bg-warning bg-opacity-10 text-warning mx-auto mb-3">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+                <h3 class="mb-1">{{ at_risk_count|default:"0" }}</h3>
+                <p class="text-muted mb-0">{% trans "At-Risk Students" %}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Course Performance -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>{% trans "Course Performance" %}</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>{% trans "Course" %}</th>
+                        <th>{% trans "Students" %}</th>
+                        <th>{% trans "Avg. Grade" %}</th>
+                        <th>{% trans "Pass Rate" %}</th>
+                        <th>{% trans "Attendance" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in course_analytics %}
+                    <tr>
+                        <td>
+                            <strong>{{ course.code }}</strong><br>
+                            <small class="text-muted">{{ course.title }}</small>
+                        </td>
+                        <td>{{ course.student_count }}</td>
+                        <td>{{ course.avg_grade|default:"-" }}</td>
+                        <td>{{ course.pass_rate|default:"0" }}%</td>
+                        <td>{{ course.avg_attendance|default:"0" }}%</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                            {% trans "No course data available" %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

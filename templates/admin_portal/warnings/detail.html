@@ -1,0 +1,202 @@
+{% extends 'admin_portal/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Warning Detail' %} - {{ warning.student.user.get_full_name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_warnings' %}">{% trans 'Warnings' %}</a></li>
+                    <li class="breadcrumb-item active">{{ warning.student.student_no }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4 {% if warning.warning_level == 'red' %}border-danger{% elif warning.warning_level == 'orange' %}border-warning{% elif warning.warning_level == 'yellow' %}border-info{% else %}border-success{% endif %}">
+                <div class="card-header {% if warning.warning_level == 'red' %}bg-danger text-white{% elif warning.warning_level == 'orange' %}bg-warning{% elif warning.warning_level == 'yellow' %}bg-info text-white{% else %}bg-success text-white{% endif %}">
+                    <h5 class="card-title mb-0">
+                        {% trans 'Warning Details' %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6>{% trans 'Student Information' %}</h6>
+                            <p class="mb-1"><strong>{% trans 'Name:' %}</strong> {{ warning.student.user.get_full_name }}</p>
+                            <p class="mb-1"><strong>{% trans 'Student No:' %}</strong> {{ warning.student.student_no }}</p>
+                            <p class="mb-1"><strong>{% trans 'Program:' %}</strong> {{ warning.student.program }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>{% trans 'Semester' %}</h6>
+                            <p class="mb-1"><strong>{{ warning.semester }}</strong></p>
+                            <p class="mb-1"><strong>{% trans 'Generated:' %}</strong> {{ warning.generated_at|date:"Y-m-d H:i" }}</p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row mb-4">
+                        <div class="col-md-4 text-center">
+                            <h6>{% trans 'Risk Score' %}</h6>
+                            <div class="display-4 
+                                {% if warning.risk_score <= 25 %}text-success{% elif warning.risk_score <= 50 %}text-info{% elif warning.risk_score <= 75 %}text-warning{% else %}text-danger{% endif %}">
+                                {{ warning.risk_score|floatformat:1 }}
+                            </div>
+                            <small class="text-muted">{% trans 'out of 100' %}</small>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h6>{% trans 'Warning Level' %}</h6>
+                            <div class="mt-3">
+                                <span class="badge fs-6
+                                    {% if warning.warning_level == 'red' %}bg-danger{% elif warning.warning_level == 'orange' %}bg-warning text-dark{% elif warning.warning_level == 'yellow' %}bg-info{% else %}bg-success{% endif %}">
+                                    {{ warning.get_warning_level_display }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <h6>{% trans 'Status' %}</h6>
+                            <div class="mt-3">
+                                {% if warning.is_acknowledged %}
+                                    <span class="badge bg-success"><i class="fas fa-check"></i> {% trans 'Acknowledged' %}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{% trans 'Pending Acknowledgment' %}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <h6>{% trans 'Risk Factors Detected' %}</h6>
+                    {% if warning.risk_factors %}
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>{% trans 'Factor' %}</th>
+                                        <th>{% trans 'Description' %}</th>
+                                        <th>{% trans 'Current Value' %}</th>
+                                        <th>{% trans 'Threshold' %}</th>
+                                        <th>{% trans 'Score' %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for factor in warning.risk_factors %}
+                                    <tr>
+                                        <td><strong>{{ factor.name }}</strong></td>
+                                        <td>{{ factor.description }}</td>
+                                        <td>{{ factor.value }}</td>
+                                        <td>{{ factor.threshold }}</td>
+                                        <td>{{ factor.score|floatformat:1 }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-success">{% trans 'No risk factors detected. Student is performing well.' %}</p>
+                    {% endif %}
+
+                    <hr>
+
+                    <h6>{% trans 'Category Risk Scores' %}</h6>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>{% trans 'GPA Risk:' %}</strong> {{ warning.gpa_risk_score|floatformat:1 }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>{% trans 'CGPA Risk:' %}</strong> {{ warning.cgpa_risk_score|floatformat:1 }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>{% trans 'Attendance Risk:' %}</strong> {{ warning.attendance_risk_score|floatformat:1 }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>{% trans 'Course Failure Risk:' %}</strong> {{ warning.course_failure_risk_score|floatformat:1 }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>{% trans 'Trend Risk:' %}</strong> {{ warning.trend_risk_score|floatformat:1 }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="mb-1"><strong>{% trans 'Missing Assessment Risk:' %}</strong> {{ warning.missing_assessment_risk_score|floatformat:1 }}</p>
+                        </div>
+                    </div>
+
+                    {% if warning.recommendations %}
+                    <hr>
+                    <h6>{% trans 'Recommendations' %}</h6>
+                    <ul class="list-group">
+                        {% for rec in warning.recommendations %}
+                        <li class="list-group-item">
+                            <i class="fas fa-lightbulb text-warning me-2"></i>{{ rec }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">{% trans 'Actions' %}</h5>
+                </div>
+                <div class="card-body">
+                    <a href="{% url 'admin_portal:admin_student_detail' warning.student.pk %}" class="btn btn-outline-primary w-100 mb-2">
+                        <i class="fas fa-user"></i> {% trans 'View Student Profile' %}
+                    </a>
+                    {% if warning.warning_level != 'green' %}
+                    <form method="post" action="{% url 'admin_portal:admin_clear_warning' warning.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-success w-100" onclick="return confirm('{% trans "Clear this warning?" %}')">
+                            <i class="fas fa-check"></i> {% trans 'Clear Warning' %}
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">{% trans 'Warning History' %}</h5>
+                </div>
+                <div class="card-body">
+                    {% with history=warning.student.warning_results.all %}
+                        {% if history|length > 1 %}
+                            <ul class="list-group list-group-flush">
+                                {% for h in history %}
+                                    {% if h.pk != warning.pk %}
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{ h.semester }}
+                                        <span class="badge 
+                                            {% if h.warning_level == 'red' %}bg-danger{% elif h.warning_level == 'orange' %}bg-warning text-dark{% elif h.warning_level == 'yellow' %}bg-info{% else %}bg-success{% endif %}">
+                                            {{ h.get_warning_level_display }}
+                                        </span>
+                                    </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted mb-0">{% trans 'No previous warnings recorded.' %}</p>
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <a href="{% url 'admin_portal:admin_warnings' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> {% trans 'Back to Warnings List' %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

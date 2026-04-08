@@ -1,0 +1,3381 @@
+# Chinese (Simplified) Translation File for University System
+# Copyright (C) 2026
+# This file is distributed under the same license as the university_system package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: university_system 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-28 05:00+0800\n"
+"PO-Revision-Date: 2026-03-28 05:00+0800\n"
+"Last-Translator: \n"
+"Language-Team: Chinese (Simplified)\n"
+"Language: zh-hans\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: templates/public/landing.html:4
+msgid "Welcome"
+msgstr "欢迎"
+
+#: templates/public/landing.html:14
+msgid "University Academic"
+msgstr "大学学业"
+
+#: templates/public/landing.html:15
+msgid "Performance Management"
+msgstr "成绩管理系统"
+
+#: templates/public/landing.html:16
+msgid "& Early Warning System"
+msgstr "与预警系统"
+
+#: templates/base/base.html:191
+msgid "Profile"
+msgstr "个人资料"
+
+#: templates/base/base.html:193
+msgid "Change Password"
+msgstr "修改密码"
+
+#: templates/base/base.html:196
+msgid "Logout"
+msgstr "退出登录"
+
+#: templates/base/base.html:200
+msgid "Login"
+msgstr "登录"
+
+#: templates/accounts/login.html:5 templates/accounts/login.html:25
+msgid "Sign In"
+msgstr "登录"
+
+#: templates/accounts/login.html:32
+msgid "Username"
+msgstr "用户名"
+
+#: templates/accounts/login.html:38
+msgid "Password"
+msgstr "密码"
+
+#: templates/accounts/login.html:45
+msgid "Remember me"
+msgstr "记住我"
+
+#: templates/accounts/login.html:50
+msgid "Forgot Password?"
+msgstr "忘记密码？"
+
+#: templates/student_portal/dashboard.html:4
+#: templates/student_portal/dashboard.html:7
+#: templates/student_portal/dashboard.html:12
+msgid "Student Dashboard"
+msgstr "学生仪表板"
+
+#: templates/student_portal/dashboard.html:13
+msgid "Welcome"
+msgstr "欢迎"
+
+#: templates/student_portal/dashboard.html:21
+msgid "Academic Warning!"
+msgstr "学业警告！"
+
+#: templates/student_portal/dashboard.html:22
+msgid "Please check your"
+msgstr "请查看您的"
+
+#: templates/student_portal/dashboard.html:22
+msgid "Warning Center"
+msgstr "预警中心"
+
+#: templates/student_portal/dashboard.html:22
+msgid "for details and recommended actions."
+msgstr "了解详细信息和建议措施。"
+
+#: templates/student_portal/dashboard.html:35
+msgid "CGPA"
+msgstr "累积GPA"
+
+#: templates/student_portal/dashboard.html:44
+msgid "Current GPA"
+msgstr "当前GPA"
+
+#: templates/student_portal/dashboard.html:53
+msgid "Current Courses"
+msgstr "当前课程"
+
+#: templates/student_portal/dashboard.html:62
+msgid "Status"
+msgstr "状态"
+
+#: templates/student_portal/dashboard.html:72
+#: templates/student_portal/dashboard.html:80
+msgid "Current Courses"
+msgstr "当前课程"
+
+#: templates/student_portal/dashboard.html:73
+msgid "View All"
+msgstr "查看全部"
+
+#: templates/student_portal/dashboard.html:81
+msgid "Course"
+msgstr "课程"
+
+#: templates/student_portal/dashboard.html:82
+msgid "Attendance"
+msgstr "出勤"
+
+#: templates/student_portal/dashboard.html:83
+msgid "Grade"
+msgstr "成绩"
+
+#: templates/student_portal/dashboard.html:84
+msgid "Actions"
+msgstr "操作"
+
+#: templates/student_portal/dashboard.html:121
+msgid "No current enrollments"
+msgstr "暂无当前选课"
+
+#: templates/student_portal/dashboard.html:135
+msgid "Quick Actions"
+msgstr "快速操作"
+
+#: templates/student_portal/dashboard.html:140
+msgid "My Results"
+msgstr "我的成绩"
+
+#: templates/student_portal/dashboard.html:143
+msgid "GPA / CGPA"
+msgstr "GPA / 累积GPA"
+
+#: templates/student_portal/dashboard.html:146
+msgid "Transcript"
+msgstr "成绩单"
+
+#: templates/student_portal/dashboard.html:150
+msgid "Warning Center"
+msgstr "预警中心"
+
+#: templates/student_portal/dashboard.html:160
+msgid "Announcements"
+msgstr "公告"
+
+#: templates/student_portal/dashboard.html:171
+msgid "No announcements"
+msgstr "暂无公告"
+
+#: templates/base/base.html:248
+msgid "Home"
+msgstr "首页"
+
+#: templates/base/base.html:264
+msgid "All rights reserved."
+msgstr "版权所有。"
+
+#: templates/base/base.html:265
+msgid "Bilingual Academic Performance Management System"
+msgstr "双语学业成绩管理系统"
+
+#: templates/admin_portal/students/list.html:16
+msgid "Student Management"
+msgstr "学生管理"
+
+#: templates/admin_portal/students/list.html:17
+msgid "Add New Student"
+msgstr "添加新学生"
+
+#: templates/admin_portal/students/list.html:28
+msgid "Search"
+msgstr "搜索"
+
+#: templates/admin_portal/students/list.html:33
+msgid "Status"
+msgstr "状态"
+
+#: templates/admin_portal/students/list.html:36
+msgid "All Status"
+msgstr "所有状态"
+
+#: templates/admin_portal/students/list.html:38
+msgid "Active"
+msgstr "在读"
+
+#: templates/admin_portal/students/list.html:39
+msgid "Inactive"
+msgstr "休学"
+
+#: templates/admin_portal/students/list.html:40
+msgid "Suspended"
+msgstr "停学"
+
+#: templates/admin_portal/students/list.html:41
+msgid "Graduated"
+msgstr "已毕业"
+
+#: templates/admin_portal/students/list.html:51
+msgid "Department"
+msgstr "院系"
+
+#: templates/admin_portal/students/list.html:52
+msgid "All Departments"
+msgstr "所有院系"
+
+#: templates/admin_portal/students/list.html:59
+msgid "Batch Year"
+msgstr "年级"
+
+#: templates/admin_portal/students/list.html:61
+msgid "Year..."
+msgstr "年份..."
+
+#: templates/admin_portal/students/list.html:66
+msgid "Per Page"
+msgstr "每页显示"
+
+#: templates/admin_portal/students/list.html:76
+msgid "Apply Filters"
+msgstr "应用筛选"
+
+#: templates/admin_portal/students/list.html:79
+msgid "Clear Filters"
+msgstr "清除筛选"
+
+#: templates/admin_portal/students/list.html:91
+msgid "Filtered results:"
+msgstr "筛选结果："
+
+#: templates/admin_portal/students/list.html:91
+msgid "students found"
+msgstr "名学生"
+
+#: templates/admin_portal/students/list.html:93
+msgid "Total students:"
+msgstr "学生总数："
+
+#: templates/admin_portal/students/list.html:101
+msgid "Student ID"
+msgstr "学号"
+
+#: templates/admin_portal/students/list.html:102
+msgid "Name"
+msgstr "姓名"
+
+#: templates/admin_portal/students/list.html:103
+msgid "Department"
+msgstr "院系"
+
+#: templates/admin_portal/students/list.html:104
+msgid "Program"
+msgstr "专业"
+
+#: templates/admin_portal/students/list.html:105
+msgid "Batch Year"
+msgstr "年级"
+
+#: templates/admin_portal/students/list.html:106
+msgid "CGPA"
+msgstr "累积GPA"
+
+#: templates/admin_portal/students/list.html:107
+msgid "Actions"
+msgstr "操作"
+
+#: templates/admin_portal/students/list.html:117
+msgid "View"
+msgstr "查看"
+
+#: templates/admin_portal/students/list.html:118
+msgid "Edit"
+msgstr "编辑"
+
+#: templates/admin_portal/students/list.html:119
+msgid "Delete"
+msgstr "删除"
+
+#: templates/admin_portal/teachers/form.html:14
+msgid "Add Teacher"
+msgstr "添加教师"
+
+#: templates/admin_portal/teachers/form.html:14
+msgid "Edit Teacher"
+msgstr "编辑教师"
+
+#: templates/admin_portal/teachers/form.html:25
+msgid "Account Information"
+msgstr "账户信息"
+
+#: templates/admin_portal/teachers/form.html:28
+msgid "Email"
+msgstr "邮箱"
+
+#: templates/admin_portal/teachers/form.html:33
+msgid "Full Name (English)"
+msgstr "英文姓名"
+
+#: templates/admin_portal/teachers/form.html:39
+msgid "Full Name (Chinese)"
+msgstr "中文姓名"
+
+#: templates/admin_portal/teachers/form.html:43
+msgid "Phone Number"
+msgstr "电话号码"
+
+#: templates/admin_portal/teachers/form.html:50
+msgid "Employment Information"
+msgstr "就业信息"
+
+#: templates/admin_portal/teachers/form.html:54
+msgid "Teacher Number"
+msgstr "教师编号"
+
+#: templates/admin_portal/teachers/form.html:58
+msgid "Select Department"
+msgstr "选择院系"
+
+#: templates/admin_portal/teachers/form.html:69
+msgid "Title"
+msgstr "职称"
+
+#: templates/admin_portal/teachers/form.html:71
+msgid "Select Title"
+msgstr "选择职称"
+
+#: templates/admin_portal/teachers/form.html:73
+msgid "Lecturer"
+msgstr "讲师"
+
+#: templates/admin_portal/teachers/form.html:74
+msgid "Assistant Professor"
+msgstr "助理教授"
+
+#: templates/admin_portal/teachers/form.html:75
+msgid "Associate Professor"
+msgstr "副教授"
+
+#: templates/admin_portal/teachers/form.html:76
+msgid "Professor"
+msgstr "教授"
+
+#: templates/admin_portal/teachers/form.html:77
+msgid "Visiting Professor"
+msgstr "客座教授"
+
+#: templates/admin_portal/teachers/form.html:81
+msgid "Employment Type"
+msgstr "就业类型"
+
+#: templates/admin_portal/teachers/form.html:83
+msgid "Full Time"
+msgstr "全职"
+
+#: templates/admin_portal/teachers/form.html:84
+msgid "Part Time"
+msgstr "兼职"
+
+#: templates/admin_portal/teachers/form.html:85
+msgid "Contract"
+msgstr "合同制"
+
+#: templates/admin_portal/teachers/form.html:92
+msgid "Specialization"
+msgstr "专业领域"
+
+#: templates/admin_portal/teachers/form.html:96
+msgid "Join Date"
+msgstr "入职日期"
+
+#: templates/admin_portal/teachers/form.html:102
+msgid "Status"
+msgstr "状态"
+
+#: templates/admin_portal/teachers/form.html:104
+msgid "On Leave"
+msgstr "休假"
+
+#: templates/admin_portal/teachers/form.html:106
+msgid "Suspended"
+msgstr "停职"
+
+#: templates/admin_portal/teachers/form.html:107
+msgid "Retired"
+msgstr "退休"
+
+#: templates/admin_portal/teachers/form.html:112
+msgid "Save Teacher"
+msgstr "保存教师"
+
+#: templates/admin_portal/teachers/form.html:115
+msgid "Cancel"
+msgstr "取消"
+
+#: templates/admin_portal/teachers/form.html:119
+msgid "Back"
+msgstr "返回"
+
+#: templates/admin_portal/enrollments/bulk.html:14
+msgid "Bulk Student Enrollment"
+msgstr "批量学生注册"
+
+#: templates/admin_portal/enrollments/bulk.html:16
+msgid "Back to Enrollments"
+msgstr "返回注册管理"
+
+#: templates/admin_portal/enrollments/bulk.html:35
+msgid "Enroll Multiple Students"
+msgstr "注册多名学生"
+
+#: templates/admin_portal/enrollments/bulk.html:43
+msgid "Select Course"
+msgstr "选择课程"
+
+#: templates/admin_portal/enrollments/bulk.html:45
+msgid "Choose a course..."
+msgstr "选择课程..."
+
+#: templates/admin_portal/enrollments/bulk.html:55
+msgid "Course Info"
+msgstr "课程信息"
+
+#: templates/admin_portal/enrollments/bulk.html:65
+msgid "Select Students"
+msgstr "选择学生"
+
+#: templates/admin_portal/enrollments/bulk.html:68
+msgid "Select All"
+msgstr "全选"
+
+#: templates/admin_portal/enrollments/bulk.html:71
+msgid "Deselect All"
+msgstr "取消全选"
+
+#: templates/admin_portal/enrollments/bulk.html:84
+msgid "Student ID"
+msgstr "学号"
+
+#: templates/admin_portal/enrollments/bulk.html:85
+msgid "Name"
+msgstr "姓名"
+
+#: templates/admin_portal/enrollments/bulk.html:86
+msgid "Department"
+msgstr "院系"
+
+#: templates/admin_portal/enrollments/bulk.html:87
+msgid "Program"
+msgstr "专业"
+
+#: templates/admin_portal/enrollments/bulk.html:88
+msgid "Status"
+msgstr "状态"
+
+#: templates/admin_portal/enrollments/bulk.html:118
+msgid "No active students found"
+msgstr "未找到在读学生"
+
+#: templates/admin_portal/enrollments/bulk.html:132
+msgid "students selected"
+msgstr "名学生已选择"
+
+#: templates/admin_portal/enrollments/bulk.html:136
+msgid "Clear"
+msgstr "清除"
+
+#: templates/admin_portal/enrollments/bulk.html:139
+msgid "Enroll Selected Students"
+msgstr "注册选中学生"
+
+#: templates/admin_portal/enrollments/bulk.html:176
+msgid "Semester:"
+msgstr "学期："
+
+#: templates/admin_portal/enrollments/bulk.html:177
+msgid "Credits:"
+msgstr "学分："
+
+#: templates/admin_portal/enrollments/bulk.html:178
+msgid "Instructor:"
+msgstr "教师："
+
+#: templates/base/_default_sidebar.html:5
+msgid "Menu"
+msgstr "菜单"
+
+#: templates/base/_default_sidebar.html:13
+#: templates/base/_default_sidebar.html:76
+#: templates/base/_default_sidebar.html:109
+msgid "Dashboard"
+msgstr "仪表板"
+
+#: templates/base/_default_sidebar.html:18
+msgid "Users"
+msgstr "用户"
+
+#: templates/base/_default_sidebar.html:23
+msgid "Students"
+msgstr "学生"
+
+#: templates/base/_default_sidebar.html:28
+msgid "Teachers"
+msgstr "教师"
+
+#: templates/base/_default_sidebar.html:33
+msgid "Departments"
+msgstr "院系"
+
+#: templates/base/_default_sidebar.html:38
+msgid "Courses"
+msgstr "课程"
+
+#: templates/base/_default_sidebar.html:43
+msgid "Enrollments"
+msgstr "注册"
+
+#: templates/base/_default_sidebar.html:48
+msgid "Warnings"
+msgstr "预警"
+
+#: templates/base/_default_sidebar.html:53
+#: templates/base/_default_sidebar.html:160
+msgid "Announcements"
+msgstr "公告"
+
+#: templates/base/_default_sidebar.html:58
+msgid "Reports"
+msgstr "报告"
+
+#: templates/base/_default_sidebar.html:63
+msgid "Settings"
+msgstr "设置"
+
+#: templates/base/_default_sidebar.html:68
+msgid "Audit Logs"
+msgstr "审计日志"
+
+#: templates/base/_default_sidebar.html:81
+#: templates/base/_default_sidebar.html:114
+msgid "My Courses"
+msgstr "我的课程"
+
+#: templates/base/_default_sidebar.html:86
+#: templates/base/_default_sidebar.html:129
+msgid "Attendance"
+msgstr "出勤"
+
+#: templates/base/_default_sidebar.html:91
+msgid "Enter Marks"
+msgstr "录入成绩"
+
+#: templates/base/_default_sidebar.html:96
+msgid "At-Risk Students"
+msgstr "风险学生"
+
+#: templates/base/_default_sidebar.html:101
+msgid "Performance Analytics"
+msgstr "成绩分析"
+
+#: templates/base/_default_sidebar.html:119
+msgid "My Results"
+msgstr "我的成绩"
+
+#: templates/base/_default_sidebar.html:124
+msgid "GPA / CGPA"
+msgstr "GPA / 累积GPA"
+
+#: templates/base/_default_sidebar.html:134
+msgid "Warning Center"
+msgstr "预警中心"
+
+#: templates/base/_default_sidebar.html:87
+msgid "Activate Accounts"
+msgstr "激活账户"
+
+#: templates/base/_default_sidebar.html:4
+msgid "Menu"
+msgstr "菜单"
+
+#: templates/base/_default_sidebar.html:12
+#: templates/base/_default_sidebar.html:95
+#: templates/base/_default_sidebar.html:128
+msgid "Dashboard"
+msgstr "仪表板"
+
+#: templates/base/_default_sidebar.html:17
+msgid "Users"
+msgstr "用户"
+
+#: templates/base/_default_sidebar.html:22
+msgid "Students"
+msgstr "学生"
+
+#: templates/base/_default_sidebar.html:27
+msgid "Teachers"
+msgstr "教师"
+
+#: templates/base/_default_sidebar.html:32
+msgid "Departments"
+msgstr "院系"
+
+#: templates/base/_default_sidebar.html:37
+msgid "Programs"
+msgstr "专业"
+
+#: templates/base/_default_sidebar.html:42
+msgid "Semesters"
+msgstr "学期"
+
+#: templates/base/_default_sidebar.html:47
+msgid "Courses"
+msgstr "课程"
+
+#: templates/base/_default_sidebar.html:52
+msgid "Course Offerings"
+msgstr "课程开设"
+
+#: templates/base/_default_sidebar.html:57
+msgid "Enrollments"
+msgstr "注册"
+
+#: templates/base/_default_sidebar.html:62
+msgid "Warnings"
+msgstr "预警"
+
+#: templates/base/_default_sidebar.html:67
+msgid "Announcements"
+msgstr "公告"
+
+#: templates/base/_default_sidebar.html:72
+msgid "Reports"
+msgstr "报告"
+
+#: templates/base/_default_sidebar.html:77
+msgid "Settings"
+msgstr "设置"
+
+#: templates/base/_default_sidebar.html:82
+msgid "Audit Logs"
+msgstr "审计日志"
+
+#: templates/base/_default_sidebar.html:100
+#: templates/base/_default_sidebar.html:133
+msgid "My Courses"
+msgstr "我的课程"
+
+#: templates/base/_default_sidebar.html:105
+#: templates/base/_default_sidebar.html:148
+msgid "Attendance"
+msgstr "出勤"
+
+#: templates/base/_default_sidebar.html:110
+msgid "Enter Marks"
+msgstr "录入成绩"
+
+#: templates/base/_default_sidebar.html:115
+msgid "At-Risk Students"
+msgstr "风险学生"
+
+#: templates/base/_default_sidebar.html:120
+msgid "Performance Analytics"
+msgstr "成绩分析"
+
+#: templates/base/_default_sidebar.html:138
+msgid "My Results"
+msgstr "我的成绩"
+
+#: templates/base/_default_sidebar.html:143
+msgid "GPA / CGPA"
+msgstr "GPA / 累积GPA"
+
+#: templates/base/_default_sidebar.html:153
+msgid "Warning Center"
+msgstr "预警中心"
+
+#: templates/base/_default_sidebar.html:158
+msgid "Transcript"
+msgstr "成绩单"
+
+#: templates/base/base.html:290
+msgid "Home"
+msgstr "首页"
+
+#: templates/base/base.html:306
+msgid "All rights reserved."
+msgstr "版权所有。"
+
+#: templates/base/base.html:307
+msgid "Bilingual Academic Performance Management System"
+msgstr "双语学业成绩管理系统"
+
+# Admin Dashboard translations
+msgid "Total Teachers"
+msgstr "教师总数"
+
+msgid "Active Courses"
+msgstr "活跃课程"
+
+msgid "At-Risk Students Alert!"
+msgstr "风险学生警报！"
+
+msgid ""
+"There are currently %(at_risk)s students at risk (%(critical)s critical)."
+msgstr "当前有 %(at_risk)s 名风险学生 (%(critical)s 名危急)。"
+
+msgid "View warnings"
+msgstr "查看预警"
+
+msgid "Performance Overview"
+msgstr "绩效概览"
+
+msgid "Warning Distribution"
+msgstr "预警分布"
+
+msgid "Recent Students"
+msgstr "最近学生"
+
+msgid "Latest Announcements"
+msgstr "最新公告"
+
+msgid "Manage"
+msgstr "管理"
+
+msgid "No announcements"
+msgstr "暂无公告"
+
+msgid "Pinned"
+msgstr "置顶"
+
+msgid "Sem 1"
+msgstr "学期1"
+
+msgid "Sem 2"
+msgstr "学期2"
+
+msgid "Sem 3"
+msgstr "学期3"
+
+msgid "Sem 4"
+msgstr "学期4"
+
+msgid "Sem 5"
+msgstr "学期5"
+
+msgid "Sem 6"
+msgstr "学期6"
+
+msgid "Average GPA"
+msgstr "平均GPA"
+
+msgid "Green"
+msgstr "绿色"
+
+msgid "Yellow"
+msgstr "黄色"
+
+msgid "Orange"
+msgstr "橙色"
+
+msgid "Red"
+msgstr "红色"
+
+# Login page translations
+msgid "Sign in to your account"
+msgstr "登录您的账户"
+
+msgid "Use your Email or Student/Teacher ID"
+msgstr "使用您的邮箱或学号/教师编号"
+
+msgid "Forgot password?"
+msgstr "忘记密码？"
+
+msgid "Secure connection"
+msgstr "安全连接"
+
+# Student list translations
+msgid "Student Management"
+msgstr "学生管理"
+
+msgid "Add Student"
+msgstr "添加学生"
+
+msgid "Search by name, ID, or email..."
+msgstr "按姓名、学号或邮箱搜索..."
+
+msgid "All Status"
+msgstr "所有状态"
+
+# Course Offerings translations
+msgid "Add Course Offering"
+msgstr "添加课程开设"
+
+msgid "Section"
+msgstr "班级"
+
+msgid "Instructor"
+msgstr "教师"
+
+msgid "Schedule"
+msgstr "时间表"
+
+msgid "No course offerings found"
+msgstr "未找到课程开设"
+
+msgid "Add First Offering"
+msgstr "添加第一个课程开设"
+
+# Common actions
+msgid "View"
+msgstr "查看"
+
+msgid "Create"
+msgstr "创建"
+
+msgid "Update"
+msgstr "更新"
+
+msgid "Remove"
+msgstr "移除"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Back"
+msgstr "返回"
+
+msgid "Next"
+msgstr "下一页"
+
+msgid "Previous"
+msgstr "上一页"
+
+msgid "Showing"
+msgstr "显示"
+
+msgid "entries"
+msgstr "条记录"
+
+msgid "to"
+msgstr "至"
+
+msgid "of"
+msgstr "共"
+
+msgid "Search"
+msgstr "搜索"
+
+msgid "Filter"
+msgstr "筛选"
+
+msgid "Apply Filters"
+msgstr "应用筛选"
+
+msgid "Clear Filters"
+msgstr "清除筛选"
+
+msgid "Actions"
+msgstr "操作"
+
+msgid "No data available"
+msgstr "暂无数据"
+
+msgid "Select"
+msgstr "选择"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Submit"
+msgstr "提交"
+
+msgid "Close"
+msgstr "关闭"
+
+msgid "Confirm"
+msgstr "确认"
+
+msgid "Yes"
+msgstr "是"
+
+msgid "No"
+msgstr "否"
+
+msgid "Error"
+msgstr "错误"
+
+msgid "Success"
+msgstr "成功"
+
+msgid "Warning"
+msgstr "警告"
+
+msgid "Information"
+msgstr "信息"
+
+msgid "Loading..."
+msgstr "加载中..."
+
+msgid "Are you sure?"
+msgstr "确定吗？"
+
+msgid "This action cannot be undone."
+msgstr "此操作无法撤销。"
+
+# Landing page translations
+msgid "Welcome"
+msgstr "欢迎"
+
+msgid "University Academic"
+msgstr "大学学业"
+
+msgid "Performance Management"
+msgstr "成绩管理"
+
+msgid "& Early Warning System"
+msgstr "与预警系统"
+
+msgid ""
+"A comprehensive bilingual platform for managing academic records, tracking "
+"student performance, and implementing early intervention strategies to "
+"ensure student success."
+msgstr "一个全面的双语平台，用于管理学术记录、跟踪学生表现，并实施早期干预策略以确保学生成功。"
+
+msgid "Login to Portal"
+msgstr "登录门户"
+
+msgid "Learn More"
+msgstr "了解更多"
+
+msgid "Go to Admin Portal"
+msgstr "前往管理员门户"
+
+msgid "Go to Teacher Portal"
+msgstr "前往教师门户"
+
+msgid "Go to Student Portal"
+msgstr "前往学生门户"
+
+msgid "Bilingual Support"
+msgstr "双语支持"
+
+msgid ""
+"Full English and Chinese language support for all interfaces and academic "
+"records."
+msgstr "所有界面和学术记录的完整英文和中文语言支持。"
+
+msgid "Three Integrated Portals"
+msgstr "三个集成门户"
+
+msgid "Admin Portal"
+msgstr "管理员门户"
+
+msgid "User & Role Management"
+msgstr "用户和角色管理"
+
+msgid "Department & Course Setup"
+msgstr "院系和课程设置"
+
+msgid "Enrollment Management"
+msgstr "注册管理"
+
+msgid "System-wide Analytics"
+msgstr "系统范围分析"
+
+msgid "Audit & Configuration"
+msgstr "审计和配置"
+
+msgid "Teacher Portal"
+msgstr "教师门户"
+
+msgid "Course Management"
+msgstr "课程管理"
+
+msgid "Attendance Tracking"
+msgstr "出勤跟踪"
+
+msgid "Grade Entry & Submission"
+msgstr "成绩录入和提交"
+
+msgid "At-Risk Student Alerts"
+msgstr "风险学生警报"
+
+msgid "Class Analytics"
+msgstr "班级分析"
+
+msgid "Student Portal"
+msgstr "学生门户"
+
+msgid "Course Registration"
+msgstr "课程注册"
+
+msgid "Grade Viewing"
+msgstr "成绩查看"
+
+msgid "GPA/CGPA Tracking"
+msgstr "GPA/CGPA跟踪"
+
+msgid "Warning Notifications"
+msgstr "预警通知"
+
+msgid "Transcript Download"
+msgstr "成绩单下载"
+
+# Student Dashboard translations
+msgid "Current GPA"
+msgstr "当前GPA"
+
+msgid "Current Courses"
+msgstr "当前课程"
+
+msgid "No current enrollments"
+msgstr "暂无当前选课"
+
+msgid "Quick Actions"
+msgstr "快速操作"
+
+msgid "My Results"
+msgstr "我的成绩"
+
+msgid "Pending Grades"
+msgstr "待录入成绩"
+
+msgid "Enrolled"
+msgstr "已注册"
+
+msgid "In Progress"
+msgstr "进行中"
+
+msgid "Grading"
+msgstr "评分中"
+
+msgid "No courses assigned"
+msgstr "未分配课程"
+
+msgid "View All Courses"
+msgstr "查看所有课程"
+
+msgid "Marks"
+msgstr "成绩"
+
+msgid "Apply"
+msgstr "应用"
+
+msgid "Year"
+msgstr "年份"
+
+msgid "All Programs"
+msgstr "所有专业"
+
+msgid "All"
+msgstr "全部"
+
+msgid "Draft"
+msgstr "草稿"
+
+msgid "Published"
+msgstr "已发布"
+
+msgid "Archived"
+msgstr "已归档"
+
+# Student courses page
+msgid "My Courses"
+msgstr "我的课程"
+
+msgid "Teacher"
+msgstr "教师"
+
+msgid "Schedule"
+msgstr "课程安排"
+
+msgid "Not scheduled"
+msgstr "未安排"
+
+msgid "Pending"
+msgstr "待定"
+
+msgid "No courses found"
+msgstr "未找到课程"
+
+# Student results page
+msgid "Completed Courses"
+msgstr "已完成课程"
+
+msgid "Credits"
+msgstr "学分"
+
+msgid "Passed"
+msgstr "已通过"
+
+msgid "Failed"
+msgstr "未通过"
+
+msgid "No published results found"
+msgstr "未找到已发布成绩"
+
+# Student attendance page
+msgid "Total Classes"
+msgstr "总课时"
+
+msgid "Attended"
+msgstr "已出席"
+
+msgid "Rate"
+msgstr "出勤率"
+
+msgid "Good"
+msgstr "良好"
+
+msgid "Critical"
+msgstr "严重"
+
+# Student warnings page
+msgid "Critical Warning"
+msgstr "严重警告"
+
+msgid "High Risk Warning"
+msgstr "高风险警告"
+
+msgid "Attention Required"
+msgstr "需要注意"
+
+msgid "Generated"
+msgstr "生成时间"
+
+msgid "Acknowledge"
+msgstr "确认知晓"
+
+msgid "Acknowledged"
+msgstr "已确认"
+
+msgid "No Warnings"
+msgstr "无警告"
+
+msgid "You have no academic warnings at this time. Keep up the good work!"
+msgstr "您目前没有学业警告。请继续保持良好的学习状态！"
+
+# Student GPA page
+msgid "Cumulative GPA (CGPA)"
+msgstr "累计平均绩点"
+
+msgid "GPA Scale"
+msgstr "绩点标准"
+
+msgid "A+"
+msgstr "A+"
+
+msgid "Excellent"
+msgstr "优秀"
+
+msgid "A"
+msgstr "A"
+
+msgid "Very Good"
+msgstr "非常好"
+
+msgid "B+"
+msgstr "B+"
+
+msgid "Good"
+msgstr "良好"
+
+msgid "B"
+msgstr "B"
+
+msgid "Above Average"
+msgstr "高于平均"
+
+msgid "C+"
+msgstr "C+"
+
+msgid "Average"
+msgstr "平均"
+
+msgid "Semester History"
+msgstr "学期历史"
+
+msgid "Good Standing"
+msgstr "良好状态"
+
+msgid "Probation"
+msgstr "试读期"
+
+msgid "No semester data available"
+msgstr "暂无学期数据"
+
+# Student transcript page
+msgid "Download PDF"
+msgstr "下载PDF"
+
+msgid "Academic Transcript"
+msgstr "学业成绩单"
+
+msgid "Program"
+msgstr "专业"
+
+msgid "Course History"
+msgstr "课程历史"
+
+msgid "Grade Point"
+msgstr "绩点"
+
+msgid "Pass"
+msgstr "通过"
+
+msgid "No completed courses found"
+msgstr "未找到已完成课程"
+
+# Teacher portal translations
+msgid "Manage"
+msgstr "管理"
+
+msgid "Enter"
+msgstr "录入"
+
+msgid "Attendance Management"
+msgstr "出勤管理"
+
+msgid "Select Course"
+msgstr "选择课程"
+
+msgid "Critical Risk"
+msgstr "严重风险"
+
+msgid "High Risk"
+msgstr "高风险"
+
+msgid "Students Requiring Attention"
+msgstr "需要关注的学生"
+
+msgid "Risk Level"
+msgstr "风险等级"
+
+msgid "Current Grade"
+msgstr "当前成绩"
+
+msgid "No at-risk students found"
+msgstr "未发现风险学生"
+
+msgid "Total Courses"
+msgstr "总课程数"
+
+msgid "Pass Rate"
+msgstr "通过率"
+
+msgid "Course Performance"
+msgstr "课程表现"
+
+msgid "Avg. Grade"
+msgstr "平均成绩"
+
+msgid "No course data available"
+msgstr "暂无课程数据"
+
+msgid "Total Students"
+msgstr "学生总数"
+
+msgid "Admin Dashboard"
+msgstr "管理仪表板"
+
+msgid "Enrolled"
+msgstr "已注册"
+
+msgid "Waiting List"
+msgstr "等待列表"
+
+msgid "Dropped"
+msgstr "已退课"
+
+msgid "Withdrawn"
+msgstr "已退学"
+
+msgid "Completed"
+msgstr "已完成"
+
+msgid "Semester"
+msgstr "学期"
+
+msgid "All Semesters"
+msgstr "所有学期"
+
+msgid "Course"
+msgstr "课程"
+
+msgid "All Courses"
+msgstr "所有课程"
+
+msgid "Student"
+msgstr "学生"
+
+msgid "Status"
+msgstr "状态"
+
+msgid "Enrolled Date"
+msgstr "注册日期"
+
+msgid "Actions"
+msgstr "操作"
+
+msgid "View"
+msgstr "查看"
+
+msgid "Edit"
+msgstr "编辑"
+
+msgid "Delete"
+msgstr "删除"
+
+msgid "Save"
+msgstr "保存"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Submit"
+msgstr "提交"
+
+msgid "Back"
+msgstr "返回"
+
+msgid "Search"
+msgstr "搜索"
+
+msgid "Filter"
+msgstr "筛选"
+
+msgid "Add"
+msgstr "添加"
+
+msgid "Create"
+msgstr "创建"
+
+msgid "Update"
+msgstr "更新"
+
+msgid "Remove"
+msgstr "移除"
+
+msgid "Confirm"
+msgstr "确认"
+
+msgid "Warning"
+msgstr "警告"
+
+msgid "Error"
+msgstr "错误"
+
+msgid "Success"
+msgstr "成功"
+
+msgid "Info"
+msgstr "信息"
+
+msgid "Loading"
+msgstr "加载中"
+
+msgid "No data available"
+msgstr "暂无数据"
+
+msgid "Showing"
+msgstr "显示"
+
+msgid "to"
+msgstr "至"
+
+msgid "of"
+msgstr "共"
+
+msgid "entries"
+msgstr "条记录"
+
+msgid "Previous"
+msgstr "上一页"
+
+msgid "Next"
+msgstr "下一页"
+
+msgid "First"
+msgstr "首页"
+
+msgid "Last"
+msgstr "末页"
+
+msgid "Page"
+msgstr "页"
+
+msgid "Go"
+msgstr "跳转"
+
+msgid "Rows per page"
+msgstr "每页行数"
+
+msgid "Select"
+msgstr "选择"
+
+msgid "All"
+msgstr "全部"
+
+msgid "None"
+msgstr "无"
+
+msgid "Yes"
+msgstr "是"
+
+msgid "No"
+msgstr "否"
+
+msgid "True"
+msgstr "真"
+
+msgid "False"
+msgstr "假"
+
+msgid "Active"
+msgstr "活跃"
+
+msgid "Inactive"
+msgstr "非活跃"
+
+msgid "Pending"
+msgstr "待定"
+
+msgid "Approved"
+msgstr "已批准"
+
+msgid "Rejected"
+msgstr "已拒绝"
+
+msgid "Draft"
+msgstr "草稿"
+
+msgid "Published"
+msgstr "已发布"
+
+msgid "Archived"
+msgstr "已归档"
+
+msgid "Public"
+msgstr "公开"
+
+msgid "Private"
+msgstr "私有"
+
+msgid "Internal"
+msgstr "内部"
+
+msgid "External"
+msgstr "外部"
+
+msgid "System"
+msgstr "系统"
+
+msgid "User"
+msgstr "用户"
+
+msgid "Admin"
+msgstr "管理员"
+
+msgid "Staff"
+msgstr "工作人员"
+
+msgid "Customer"
+msgstr "客户"
+
+msgid "Guest"
+msgstr "访客"
+
+msgid "Member"
+msgstr "成员"
+
+msgid "Owner"
+msgstr "所有者"
+
+msgid "Manager"
+msgstr "经理"
+
+msgid "Supervisor"
+msgstr "主管"
+
+msgid "Employee"
+msgstr "员工"
+
+msgid "Contact"
+msgstr "联系人"
+
+msgid "Address"
+msgstr "地址"
+
+msgid "Phone"
+msgstr "电话"
+
+msgid "Email"
+msgstr "电子邮件"
+
+msgid "Fax"
+msgstr "传真"
+
+msgid "Mobile"
+msgstr "手机"
+
+msgid "Website"
+msgstr "网站"
+
+msgid "URL"
+msgstr "网址"
+
+msgid "Link"
+msgstr "链接"
+
+msgid "File"
+msgstr "文件"
+
+msgid "Image"
+msgstr "图片"
+
+msgid "Photo"
+msgstr "照片"
+
+msgid "Video"
+msgstr "视频"
+
+msgid "Audio"
+msgstr "音频"
+
+msgid "Document"
+msgstr "文档"
+
+msgid "Spreadsheet"
+msgstr "电子表格"
+
+msgid "Presentation"
+msgstr "演示文稿"
+
+msgid "PDF"
+msgstr "PDF文档"
+
+msgid "Text"
+msgstr "文本"
+
+msgid "HTML"
+msgstr "HTML文档"
+
+msgid "XML"
+msgstr "XML文档"
+
+msgid "JSON"
+msgstr "JSON文档"
+
+msgid "CSV"
+msgstr "CSV文档"
+
+msgid "ZIP"
+msgstr "ZIP压缩包"
+
+msgid "Archive"
+msgstr "压缩包"
+
+msgid "Folder"
+msgstr "文件夹"
+
+msgid "Directory"
+msgstr "目录"
+
+msgid "Path"
+msgstr "路径"
+
+msgid "Location"
+msgstr "位置"
+
+msgid "Destination"
+msgstr "目的地"
+
+msgid "Source"
+msgstr "来源"
+
+msgid "Origin"
+msgstr "起源"
+
+msgid "Target"
+msgstr "目标"
+
+msgid "Goal"
+msgstr "目标"
+
+msgid "Objective"
+msgstr "目的"
+
+msgid "Purpose"
+msgstr "用途"
+
+msgid "Reason"
+msgstr "原因"
+
+msgid "Cause"
+msgstr "原因"
+
+msgid "Effect"
+msgstr "效果"
+
+msgid "Result"
+msgstr "结果"
+
+msgid "Outcome"
+msgstr "成果"
+
+msgid "Output"
+msgstr "输出"
+
+msgid "Input"
+msgstr "输入"
+
+msgid "Value"
+msgstr "值"
+
+msgid "Key"
+msgstr "键"
+
+msgid "Name"
+msgstr "名称"
+
+msgid "Title"
+msgstr "标题"
+
+msgid "Description"
+msgstr "描述"
+
+msgid "Summary"
+msgstr "摘要"
+
+msgid "Details"
+msgstr "详情"
+
+msgid "Content"
+msgstr "内容"
+
+msgid "Body"
+msgstr "正文"
+
+msgid "Header"
+msgstr "页眉"
+
+msgid "Footer"
+msgstr "页脚"
+
+msgid "Sidebar"
+msgstr "侧边栏"
+
+msgid "Navigation"
+msgstr "导航"
+
+msgid "Menu"
+msgstr "菜单"
+
+msgid "Submenu"
+msgstr "子菜单"
+
+msgid "Item"
+msgstr "项目"
+
+msgid "Entry"
+msgstr "条目"
+
+msgid "Record"
+msgstr "记录"
+
+msgid "Row"
+msgstr "行"
+
+msgid "Column"
+msgstr "列"
+
+msgid "Cell"
+msgstr "单元格"
+
+msgid "Grid"
+msgstr "网格"
+
+msgid "Table"
+msgstr "表格"
+
+msgid "List"
+msgstr "列表"
+
+msgid "Tree"
+msgstr "树"
+
+msgid "Graph"
+msgstr "图表"
+
+msgid "Chart"
+msgstr "图表"
+
+msgid "Diagram"
+msgstr "图解"
+
+msgid "Map"
+msgstr "地图"
+
+msgid "Plan"
+msgstr "计划"
+
+msgid "Schedule"
+msgstr "时间表"
+
+msgid "Timeline"
+msgstr "时间线"
+
+msgid "Calendar"
+msgstr "日历"
+
+msgid "Date"
+msgstr "日期"
+
+msgid "Time"
+msgstr "时间"
+
+msgid "Day"
+msgstr "日"
+
+msgid "Week"
+msgstr "周"
+
+msgid "Month"
+msgstr "月"
+
+msgid "Year"
+msgstr "年"
+
+msgid "Today"
+msgstr "今天"
+
+msgid "Yesterday"
+msgstr "昨天"
+
+msgid "Tomorrow"
+msgstr "明天"
+
+msgid "Now"
+msgstr "现在"
+
+msgid "Later"
+msgstr "稍后"
+
+msgid "Soon"
+msgstr "很快"
+
+msgid "Never"
+msgstr "从不"
+
+msgid "Always"
+msgstr "总是"
+
+msgid "Sometimes"
+msgstr "有时"
+
+msgid "Often"
+msgstr "经常"
+
+msgid "Rarely"
+msgstr "很少"
+
+msgid "Usually"
+msgstr "通常"
+
+msgid "Normally"
+msgstr "通常"
+
+msgid "Generally"
+msgstr "一般"
+
+msgid "Specifically"
+msgstr "具体"
+
+msgid "Particularly"
+msgstr "尤其"
+
+msgid "Especially"
+msgstr "特别是"
+
+msgid "Mainly"
+msgstr "主要"
+
+msgid "Mostly"
+msgstr "大部分"
+
+msgid "Partly"
+msgstr "部分"
+
+msgid "Fully"
+msgstr "完全"
+
+msgid "Completely"
+msgstr "完全"
+
+msgid "Totally"
+msgstr "完全"
+
+msgid "Entirely"
+msgstr "全部"
+
+msgid "Absolutely"
+msgstr "绝对"
+
+msgid "Definitely"
+msgstr "肯定"
+
+msgid "Probably"
+msgstr "可能"
+
+msgid "Maybe"
+msgstr "也许"
+
+msgid "Perhaps"
+msgstr "或许"
+
+msgid "Possibly"
+msgstr "可能"
+
+msgid "Likely"
+msgstr "可能"
+
+msgid "Unlikely"
+msgstr "不太可能"
+
+msgid "Certain"
+msgstr "确定"
+
+msgid "Uncertain"
+msgstr "不确定"
+
+msgid "Sure"
+msgstr "确定"
+
+msgid "Unsure"
+msgstr "不确定"
+
+msgid "Positive"
+msgstr "积极"
+
+msgid "Negative"
+msgstr "消极"
+
+msgid "Neutral"
+msgstr "中性"
+
+msgid "Good"
+msgstr "好"
+
+msgid "Bad"
+msgstr "坏"
+
+msgid "Better"
+msgstr "更好"
+
+msgid "Worse"
+msgstr "更差"
+
+msgid "Best"
+msgstr "最好"
+
+msgid "Worst"
+msgstr "最差"
+
+msgid "Excellent"
+msgstr "优秀"
+
+msgid "Great"
+msgstr "很棒"
+
+msgid "Good job"
+msgstr "做得好"
+
+msgid "Well done"
+msgstr "干得好"
+
+msgid "Perfect"
+msgstr "完美"
+
+msgid "Ideal"
+msgstr "理想"
+
+msgid "Satisfactory"
+msgstr "满意"
+
+msgid "Acceptable"
+msgstr "可接受"
+
+msgid "Unacceptable"
+msgstr "不可接受"
+
+msgid "Appropriate"
+msgstr "适当"
+
+msgid "Inappropriate"
+msgstr "不适当"
+
+msgid "Suitable"
+msgstr "合适"
+
+msgid "Unsuitable"
+msgstr "不合适"
+
+msgid "Compatible"
+msgstr "兼容"
+
+msgid "Incompatible"
+msgstr "不兼容"
+
+msgid "Consistent"
+msgstr "一致"
+
+msgid "Inconsistent"
+msgstr "不一致"
+
+msgid "Valid"
+msgstr "有效"
+
+msgid "Invalid"
+msgstr "无效"
+
+msgid "Correct"
+msgstr "正确"
+
+msgid "Incorrect"
+msgstr "错误"
+
+msgid "Right"
+msgstr "正确"
+
+msgid "Wrong"
+msgstr "错误"
+
+msgid "Accurate"
+msgstr "准确"
+
+msgid "Inaccurate"
+msgstr "不准确"
+
+msgid "Precise"
+msgstr "精确"
+
+msgid "Exact"
+msgstr "准确"
+
+msgid "Clear"
+msgstr "清晰"
+
+msgid "Unclear"
+msgstr "不清晰"
+
+msgid "Obvious"
+msgstr "明显"
+
+msgid "Unclear"
+msgstr "不清楚"
+
+msgid "Visible"
+msgstr "可见"
+
+msgid "Invisible"
+msgstr "不可见"
+
+msgid "Hidden"
+msgstr "隐藏"
+
+msgid "Shown"
+msgstr "显示"
+
+msgid "Display"
+msgstr "显示"
+
+msgid "Show"
+msgstr "显示"
+
+msgid "Hide"
+msgstr "隐藏"
+
+msgid "Appear"
+msgstr "出现"
+
+msgid "Disappear"
+msgstr "消失"
+
+msgid "Open"
+msgstr "打开"
+
+msgid "Close"
+msgstr "关闭"
+
+msgid "Expand"
+msgstr "展开"
+
+msgid "Collapse"
+msgstr "折叠"
+
+msgid "Enable"
+msgstr "启用"
+
+msgid "Disable"
+msgstr "禁用"
+
+msgid "Activate"
+msgstr "激活"
+
+msgid "Deactivate"
+msgstr "停用"
+
+msgid "Lock"
+msgstr "锁定"
+
+msgid "Unlock"
+msgstr "解锁"
+
+msgid "Block"
+msgstr "阻止"
+
+msgid "Unblock"
+msgstr "解除阻止"
+
+msgid "Protect"
+msgstr "保护"
+
+msgid "Unprotect"
+msgstr "解除保护"
+
+msgid "Secure"
+msgstr "安全"
+
+msgid "Insecure"
+msgstr "不安全"
+
+msgid "Safe"
+msgstr "安全"
+
+msgid "Dangerous"
+msgstr "危险"
+
+msgid "Risky"
+msgstr "有风险"
+
+msgid "Harmful"
+msgstr "有害"
+
+msgid "Beneficial"
+msgstr "有益"
+
+msgid "Useful"
+msgstr "有用"
+
+msgid "Useless"
+msgstr "无用"
+
+msgid "Helpful"
+msgstr "有帮助"
+
+msgid "Unhelpful"
+msgstr "无帮助"
+
+msgid "Effective"
+msgstr "有效"
+
+msgid "Ineffective"
+msgstr "无效"
+
+msgid "Efficient"
+msgstr "高效"
+
+msgid "Inefficient"
+msgstr "低效"
+
+msgid "Sufficient"
+msgstr "充足"
+
+msgid "Insufficient"
+msgstr "不足"
+
+msgid "Adequate"
+msgstr "适当"
+
+msgid "Inadequate"
+msgstr "不适当"
+
+msgid "Appropriate"
+msgstr "适当"
+
+msgid "Inappropriate"
+msgstr "不适当"
+
+msgid "Relevant"
+msgstr "相关"
+
+msgid "Irrelevant"
+msgstr "不相关"
+
+msgid "Related"
+msgstr "相关"
+
+msgid "Unrelated"
+msgstr "不相关"
+
+msgid "Similar"
+msgstr "相似"
+
+msgid "Different"
+msgstr "不同"
+
+msgid "Same"
+msgstr "相同"
+
+msgid "Equal"
+msgstr "等于"
+
+msgid "Unequal"
+msgstr "不等于"
+
+msgid "Equivalent"
+msgstr "等效"
+
+msgid "Identical"
+msgstr "相同"
+
+msgid "Unique"
+msgstr "唯一"
+
+msgid "Distinct"
+msgstr "独特"
+
+msgid "Special"
+msgstr "特殊"
+
+msgid "Specific"
+msgstr "具体"
+
+msgid "Generic"
+msgstr "通用"
+
+msgid "General"
+msgstr "一般"
+
+msgid "Common"
+msgstr "常见"
+
+msgid "Uncommon"
+msgstr "不常见"
+
+msgid "Rare"
+msgstr "罕见"
+
+msgid "Frequent"
+msgstr "频繁"
+
+msgid "Infrequent"
+msgstr "不频繁"
+
+msgid "Regular"
+msgstr "定期"
+
+msgid "Irregular"
+msgstr "不定期"
+
+msgid "Standard"
+msgstr "标准"
+
+msgid "Non-standard"
+msgstr "非标准"
+
+msgid "Normal"
+msgstr "正常"
+
+msgid "Abnormal"
+msgstr "异常"
+
+msgid "Typical"
+msgstr "典型"
+
+msgid "Atypical"
+msgstr "非典型"
+
+msgid "Conventional"
+msgstr "传统"
+
+msgid "Unconventional"
+msgstr "非传统"
+
+msgid "Traditional"
+msgstr "传统"
+
+msgid "Modern"
+msgstr "现代"
+
+msgid "Old"
+msgstr "旧"
+
+msgid "New"
+msgstr "新"
+
+msgid "Current"
+msgstr "当前"
+
+msgid "Past"
+msgstr "过去"
+
+msgid "Present"
+msgstr "现在"
+
+msgid "Future"
+msgstr "未来"
+
+msgid "Recent"
+msgstr "最近"
+
+msgid "Latest"
+msgstr "最新"
+
+msgid "Updated"
+msgstr "已更新"
+
+msgid "Modified"
+msgstr "已修改"
+
+msgid "Changed"
+msgstr "已更改"
+
+msgid "Unchanged"
+msgstr "未更改"
+
+msgid "Original"
+msgstr "原始"
+
+msgid "Copy"
+msgstr "复制"
+
+msgid "Duplicate"
+msgstr "副本"
+
+msgid "Clone"
+msgstr "克隆"
+
+msgid "Version"
+msgstr "版本"
+
+msgid "Edition"
+msgstr "版本"
+
+msgid "Revision"
+msgstr "修订版"
+
+msgid "Release"
+msgstr "发布"
+
+msgid "Published"
+msgstr "已发布"
+
+msgid "Unpublished"
+msgstr "未发布"
+
+msgid "Draft"
+msgstr "草稿"
+
+msgid "Final"
+msgstr "最终"
+
+msgid "Completed"
+msgstr "已完成"
+
+msgid "Finished"
+msgstr "已完成"
+
+msgid "Done"
+msgstr "完成"
+
+msgid "Undone"
+msgstr "未完成"
+
+msgid "Processed"
+msgstr "已处理"
+
+msgid "Unprocessed"
+msgstr "未处理"
+
+msgid "Verified"
+msgstr "已验证"
+
+msgid "Unverified"
+msgstr "未验证"
+
+msgid "Confirmed"
+msgstr "已确认"
+
+msgid "Unconfirmed"
+msgstr "未确认"
+
+msgid "Approved"
+msgstr "已批准"
+
+msgid "Unapproved"
+msgstr "未批准"
+
+msgid "Authorized"
+msgstr "已授权"
+
+msgid "Unauthorized"
+msgstr "未授权"
+
+msgid "Authenticated"
+msgstr "已认证"
+
+msgid "Unauthenticated"
+msgstr "未认证"
+
+msgid "Logged in"
+msgstr "已登录"
+
+msgid "Logged out"
+msgstr "已登出"
+
+msgid "Online"
+msgstr "在线"
+
+msgid "Offline"
+msgstr "离线"
+
+msgid "Busy"
+msgstr "忙碌"
+
+msgid "Available"
+msgstr "可用"
+
+msgid "Unavailable"
+msgstr "不可用"
+
+msgid "Ready"
+msgstr "就绪"
+
+msgid "Not ready"
+msgstr "未就绪"
+
+msgid "Prepared"
+msgstr "已准备"
+
+msgid "Unprepared"
+msgstr "未准备"
+
+msgid "Configured"
+msgstr "已配置"
+
+msgid "Unconfigured"
+msgstr "未配置"
+
+msgid "Installed"
+msgstr "已安装"
+
+msgid "Uninstalled"
+msgstr "未安装"
+
+msgid "Setup"
+msgstr "设置"
+
+msgid "Initialized"
+msgstr "已初始化"
+
+msgid "Started"
+msgstr "已启动"
+
+msgid "Stopped"
+msgstr "已停止"
+
+msgid "Running"
+msgstr "运行中"
+
+msgid "Not running"
+msgstr "未运行"
+
+msgid "Working"
+msgstr "工作中"
+
+msgid "Not working"
+msgstr "不工作"
+
+msgid "Functioning"
+msgstr "正常运行"
+
+msgid "Malfunctioning"
+msgstr "故障"
+
+msgid "Broken"
+msgstr "损坏"
+
+msgid "Fixed"
+msgstr "已修复"
+
+msgid "Repaired"
+msgstr "已修复"
+
+msgid "Maintained"
+msgstr "已维护"
+
+msgid "Serviced"
+msgstr "已保养"
+
+msgid "Supported"
+msgstr "已支持"
+
+msgid "Unsupported"
+msgstr "不支持"
+
+msgid "Maintained"
+msgstr "已维护"
+
+msgid "Unmaintained"
+msgstr "未维护"
+
+msgid "Deprecated"
+msgstr "已弃用"
+
+msgid "Obsolete"
+msgstr "已过时"
+
+msgid "Legacy"
+msgstr "遗留"
+
+msgid "Current"
+msgstr "当前"
+
+msgid "Latest"
+msgstr "最新"
+
+msgid "Up-to-date"
+msgstr "最新"
+
+msgid "Outdated"
+msgstr "过时"
+
+msgid "Expired"
+msgstr "已过期"
+
+msgid "Valid"
+msgstr "有效"
+
+msgid "Invalid"
+msgstr "无效"
+
+msgid "Required"
+msgstr "必填"
+
+msgid "Optional"
+msgstr "可选"
+
+msgid "Mandatory"
+msgstr "强制"
+
+msgid "Compulsory"
+msgstr "强制"
+
+msgid "Recommended"
+msgstr "推荐"
+
+msgid "Suggested"
+msgstr "建议"
+
+msgid "Advised"
+msgstr "建议"
+
+msgid "Not recommended"
+msgstr "不推荐"
+
+msgid "Discouraged"
+msgstr "不建议"
+
+msgid "Prohibited"
+msgstr "禁止"
+
+msgid "Forbidden"
+msgstr "禁止"
+
+msgid "Not allowed"
+msgstr "不允许"
+
+msgid "Allowed"
+msgstr "允许"
+
+msgid "Permitted"
+msgstr "允许"
+
+msgid "Authorized"
+msgstr "授权"
+
+msgid "Granted"
+msgstr "授予"
+
+msgid "Denied"
+msgstr "拒绝"
+
+msgid "Rejected"
+msgstr "驳回"
+
+msgid "Declined"
+msgstr "谢绝"
+
+msgid "Refused"
+msgstr "拒绝"
+
+msgid "Blocked"
+msgstr "阻止"
+
+msgid "Restricted"
+msgstr "限制"
+
+msgid "Limited"
+msgstr "有限"
+
+msgid "Unlimited"
+msgstr "无限"
+
+msgid "Controlled"
+msgstr "受控"
+
+msgid "Uncontrolled"
+msgstr "不受控"
+
+msgid "Managed"
+msgstr "已管理"
+
+msgid "Unmanaged"
+msgstr "未管理"
+
+msgid "Monitored"
+msgstr "已监控"
+
+msgid "Unmonitored"
+msgstr "未监控"
+
+msgid "Tracked"
+msgstr "已跟踪"
+
+msgid "Untracked"
+msgstr "未跟踪"
+
+msgid "Recorded"
+msgstr "已记录"
+
+msgid "Unrecorded"
+msgstr "未记录"
+
+msgid "Logged"
+msgstr "已记录"
+
+msgid "Unlogged"
+msgstr "未记录"
+
+msgid "Reported"
+msgstr "已报告"
+
+msgid "Unreported"
+msgstr "未报告"
+
+msgid "Notified"
+msgstr "已通知"
+
+msgid "Unnotified"
+msgstr "未通知"
+
+msgid "Alerted"
+msgstr "已提醒"
+
+msgid "Unalerted"
+msgstr "未提醒"
+
+msgid "Warned"
+msgstr "已警告"
+
+msgid "Unwarned"
+msgstr "未警告"
+
+msgid "Informed"
+msgstr "已告知"
+
+msgid "Uninformed"
+msgstr "未告知"
+
+msgid "Notified"
+msgstr "已通知"
+
+msgid "Acknowledged"
+msgstr "已确认"
+
+msgid "Unacknowledged"
+msgstr "未确认"
+
+msgid "Recognized"
+msgstr "已识别"
+
+msgid "Unrecognized"
+msgstr "未识别"
+
+msgid "Known"
+msgstr "已知"
+
+msgid "Unknown"
+msgstr "未知"
+
+msgid "Familiar"
+msgstr "熟悉"
+
+msgid "Unfamiliar"
+msgstr "陌生"
+
+msgid "Popular"
+msgstr "流行"
+
+msgid "Unpopular"
+msgstr "不流行"
+
+msgid "Famous"
+msgstr "著名"
+
+msgid "Infamous"
+msgstr "臭名昭著"
+
+msgid "Renowned"
+msgstr "闻名"
+
+msgid "Notorious"
+msgstr "臭名昭著"
+
+msgid "Celebrated"
+msgstr "受赞誉"
+
+msgid "Acclaimed"
+msgstr "受好评"
+
+msgid "Praised"
+msgstr "受表扬"
+
+msgid "Criticized"
+msgstr "受批评"
+
+msgid "Reviewed"
+msgstr "已审核"
+
+msgid "Unreviewed"
+msgstr "未审核"
+
+msgid "Evaluated"
+msgstr "已评估"
+
+msgid "Unevaluated"
+msgstr "未评估"
+
+msgid "Assessed"
+msgstr "已评估"
+
+msgid "Unassessed"
+msgstr "未评估"
+
+msgid "Tested"
+msgstr "已测试"
+
+msgid "Untested"
+msgstr "未测试"
+
+msgid "Checked"
+msgstr "已检查"
+
+msgid "Unchecked"
+msgstr "未检查"
+
+msgid "Inspected"
+msgstr "已检查"
+
+msgid "Uninspected"
+msgstr "未检查"
+
+msgid "Examined"
+msgstr "已检查"
+
+msgid "Unexamined"
+msgstr "未检查"
+
+msgid "Analyzed"
+msgstr "已分析"
+
+msgid "Unanalyzed"
+msgstr "未分析"
+
+msgid "Studied"
+msgstr "已研究"
+
+msgid "Unstudied"
+msgstr "未研究"
+
+msgid "Researched"
+msgstr "已研究"
+
+msgid "Unresearched"
+msgstr "未研究"
+
+msgid "Investigated"
+msgstr "已调查"
+
+msgid "Uninvestigated"
+msgstr "未调查"
+
+msgid "Explored"
+msgstr "已探索"
+
+msgid "Unexplored"
+msgstr "未探索"
+
+msgid "Discovered"
+msgstr "已发现"
+
+msgid "Undiscovered"
+msgstr "未发现"
+
+msgid "Found"
+msgstr "已找到"
+
+msgid "Lost"
+msgstr "丢失"
+
+msgid "Located"
+msgstr "已定位"
+
+msgid "Unlocated"
+msgstr "未定位"
+
+msgid "Positioned"
+msgstr "已定位"
+
+msgid "Unpositioned"
+msgstr "未定位"
+
+msgid "Placed"
+msgstr "已放置"
+
+msgid "Unplaced"
+msgstr "未放置"
+
+msgid "Arranged"
+msgstr "已安排"
+
+msgid "Unarranged"
+msgstr "未安排"
+
+msgid "Organized"
+msgstr "已组织"
+
+msgid "Unorganized"
+msgstr "未组织"
+
+msgid "Structured"
+msgstr "已构建"
+
+msgid "Unstructured"
+msgstr "未构建"
+
+msgid "Ordered"
+msgstr "已排序"
+
+msgid "Unordered"
+msgstr "未排序"
+
+msgid "Sorted"
+msgstr "已分类"
+
+msgid "Unsorted"
+msgstr "未分类"
+
+msgid "Grouped"
+msgstr "已分组"
+
+msgid "Ungrouped"
+msgstr "未分组"
+
+msgid "Classified"
+msgstr "已分类"
+
+msgid "Unclassified"
+msgstr "未分类"
+
+msgid "Categorized"
+msgstr "已分类"
+
+msgid "Uncategorized"
+msgstr "未分类"
+
+msgid "Cataloged"
+msgstr "已编目"
+
+msgid "Uncataloged"
+msgstr "未编目"
+
+msgid "Indexed"
+msgstr "已索引"
+
+msgid "Unindexed"
+msgstr "未索引"
+
+msgid "Referenced"
+msgstr "已引用"
+
+msgid "Unreferenced"
+msgstr "未引用"
+
+msgid "Linked"
+msgstr "已链接"
+
+msgid "Unlinked"
+msgstr "未链接"
+
+msgid "Connected"
+msgstr "已连接"
+
+msgid "Disconnected"
+msgstr "未连接"
+
+msgid "Attached"
+msgstr "已附加"
+
+msgid "Unattached"
+msgstr "未附加"
+
+msgid "Joined"
+msgstr "已加入"
+
+msgid "Unjoined"
+msgstr "未加入"
+
+msgid "Combined"
+msgstr "已结合"
+
+msgid "Uncombined"
+msgstr "未结合"
+
+msgid "Merged"
+msgstr "已合并"
+
+msgid "Unmerged"
+msgstr "未合并"
+
+msgid "Integrated"
+msgstr "已整合"
+
+msgid "Unintegrated"
+msgstr "未整合"
+
+msgid "United"
+msgstr "已联合"
+
+msgid "Ununited"
+msgstr "未联合"
+
+msgid "Separated"
+msgstr "已分离"
+
+msgid "Unseparated"
+msgstr "未分离"
+
+msgid "Divided"
+msgstr "已分割"
+
+msgid "Undivided"
+msgstr "未分割"
+
+msgid "Split"
+msgstr "已拆分"
+
+msgid "Unsplit"
+msgstr "未拆分"
+
+msgid "Broken"
+msgstr "已断开"
+
+msgid "Unbroken"
+msgstr "未断开"
+
+msgid "Cut"
+msgstr "已剪切"
+
+msgid "Uncut"
+msgstr "未剪切"
+
+msgid "Copied"
+msgstr "已复制"
+
+msgid "Uncopied"
+msgstr "未复制"
+
+msgid "Pasted"
+msgstr "已粘贴"
+
+msgid "Unpasted"
+msgstr "未粘贴"
+
+msgid "Moved"
+msgstr "已移动"
+
+msgid "Unmoved"
+msgstr "未移动"
+
+msgid "Transferred"
+msgstr "已转移"
+
+msgid "Untransferred"
+msgstr "未转移"
+
+msgid "Shifted"
+msgstr "已转移"
+
+msgid "Unshifted"
+msgstr "未转移"
+
+msgid "Switched"
+msgstr "已切换"
+
+msgid "Unswitched"
+msgstr "未切换"
+
+msgid "Changed"
+msgstr "已更改"
+
+msgid "Unchanged"
+msgstr "未更改"
+
+msgid "Converted"
+msgstr "已转换"
+
+msgid "Unconverted"
+msgstr "未转换"
+
+msgid "Transformed"
+msgstr "已转换"
+
+msgid "Untransformed"
+msgstr "未转换"
+
+msgid "Transcoded"
+msgstr "已转码"
+
+msgid "Untranscoded"
+msgstr "未转码"
+
+msgid "Translated"
+msgstr "已翻译"
+
+msgid "Untranslated"
+msgstr "未翻译"
+
+msgid "Interpreted"
+msgstr "已解释"
+
+msgid "Uninterpreted"
+msgstr "未解释"
+
+msgid "Explained"
+msgstr "已解释"
+
+msgid "Unexplained"
+msgstr "未解释"
+
+msgid "Defined"
+msgstr "已定义"
+
+msgid "Undefined"
+msgstr "未定义"
+
+msgid "Specified"
+msgstr "已指定"
+
+msgid "Unspecified"
+msgstr "未指定"
+
+msgid "Declared"
+msgstr "已声明"
+
+msgid "Undeclared"
+msgstr "未声明"
+
+msgid "Announced"
+msgstr "已宣布"
+
+msgid "Unannounced"
+msgstr "未宣布"
+
+msgid "Communicated"
+msgstr "已沟通"
+
+msgid "Uncommunicated"
+msgstr "未沟通"
+
+msgid "Expressed"
+msgstr "已表达"
+
+msgid "Unexpressed"
+msgstr "未表达"
+
+msgid "Described"
+msgstr "已描述"
+
+msgid "Undescribed"
+msgstr "未描述"
+
+msgid "Depicted"
+msgstr "已描绘"
+
+msgid "Undepicted"
+msgstr "未描绘"
+
+msgid "Portrayed"
+msgstr "已描绘"
+
+msgid "Unportrayed"
+msgstr "未描绘"
+
+msgid "Represented"
+msgstr "已代表"
+
+msgid "Unrepresented"
+msgstr "未代表"
+
+msgid "Symbolized"
+msgstr "已象征"
+
+msgid "Unsymbolized"
+msgstr "未象征"
+
+msgid "Signified"
+msgstr "已意味"
+
+msgid "Unsignified"
+msgstr "未意味"
+
+msgid "Meant"
+msgstr "已意味"
+
+msgid "Unmeant"
+msgstr "未意味"
+
+msgid "Indicated"
+msgstr "已指示"
+
+msgid "Unindicated"
+msgstr "未指示"
+
+msgid "Pointed"
+msgstr "已指向"
+
+msgid "Unpointed"
+msgstr "未指向"
+
+msgid "Directed"
+msgstr "已指导"
+
+msgid "Undirected"
+msgstr "未指导"
+
+msgid "Guided"
+msgstr "已指导"
+
+msgid "Unguided"
+msgstr "未指导"
+
+msgid "Led"
+msgstr "已引导"
+
+msgid "Unled"
+msgstr "未引导"
+
+msgid "Followed"
+msgstr "已跟随"
+
+msgid "Unfollowed"
+msgstr "未跟随"
+
+msgid "Preceded"
+msgstr "已先于"
+
+msgid "Unpreceded"
+msgstr "未先于"
+
+msgid "Succeeded"
+msgstr "已成功"
+
+msgid "Unsucceeded"
+msgstr "未成功"
+
+msgid "Followed"
+msgstr "已跟随"
+
+msgid "Unfollowed"
+msgstr "未跟随"
+
+msgid "My Profile"
+msgstr "我的资料"
+
+msgid "Back to Dashboard"
+msgstr "返回仪表板"
+
+msgid "Profile Summary"
+msgstr "资料摘要"
+
+msgid "Edit Profile Information"
+msgstr "编辑资料信息"
+
+msgid "Personal Information"
+msgstr "个人信息"
+
+msgid "Full Name (English)"
+msgstr "全名（英文）"
+
+msgid "Full Name (Chinese)"
+msgstr "全名（中文）"
+
+msgid "Profile Photo"
+msgstr "头像照片"
+
+msgid "Office Information"
+msgstr "办公室信息"
+
+msgid "Office Location"
+msgstr "办公室位置"
+
+msgid "e.g., Building A, Room 101"
+msgstr "例如：A楼101室"
+
+msgid "e.g., Mon 10:00-12:00, Wed 14:00-16:00"
+msgstr "例如：周一10:00-12:00，周三14:00-16:00"
+
+msgid "Online Presence"
+msgstr "在线信息"
+
+msgid "Personal Website"
+msgstr "个人网站"
+
+msgid "LinkedIn Profile"
+msgstr "领英资料"
+
+msgid "Academic Information"
+msgstr "学术信息"
+
+msgid "Specialization / Research Area"
+msgstr "专业/研究领域"
+
+msgid "e.g., Machine Learning, Data Science"
+msgstr "例如：机器学习，数据科学"
+
+msgid "Education Background"
+msgstr "教育背景"
+
+msgid "Your academic degrees and educational history"
+msgstr "您的学术学位和教育经历"
+
+msgid "Research & Publications"
+msgstr "研究与发表"
+
+msgid "Research Interests"
+msgstr "研究兴趣"
+
+msgid "Describe your research interests and areas of expertise"
+msgstr "描述您的研究兴趣和专业领域"
+
+msgid "Research Abilities"
+msgstr "研究能力"
+
+msgid "List your research skills, methodologies, and technical abilities"
+msgstr "列出您的研究技能、方法论和技术能力"
+
+msgid "Publications"
+msgstr "发表论文"
+
+msgid "List your key publications, papers, and research works"
+msgstr "列出您的主要出版物、论文和研究作品"
+
+msgid "Teaching & Experience"
+msgstr "教学与经验"
+
+msgid "Teaching Interests"
+msgstr "教学兴趣"
+
+msgid "Courses and subjects you are interested in teaching"
+msgstr "您有兴趣教授的课程和科目"
+
+msgid "Professional Experience"
+msgstr "职业经历"
+
+msgid "Your work experience and professional background"
+msgstr "您的工作经历和职业背景"
+
+msgid "Awards & Honors"
+msgstr "奖项与荣誉"
+
+msgid "Awards and Honors"
+msgstr "奖项与荣誉"
+
+msgid "Awards, recognitions, and honors received"
+msgstr "获得的奖项、认可和荣誉"
+
+msgid "Biography"
+msgstr "个人简介"
+
+msgid "Write a brief biography about yourself"
+msgstr "撰写关于您的简短简介"
+
+msgid "Save Profile"
+msgstr "保存资料"
+
+msgid "Profile updated successfully"
+msgstr "资料更新成功"
+
+msgid "Remove from course"
+msgstr "从课程中移除"
+
+msgid "Are you sure you want to remove this student from the course?"
+msgstr "您确定要从课程中移除该学生吗？"
+
+msgid "Delete Enrollment"
+msgstr "删除注册"
+
+msgid "Enrollment Details"
+msgstr "注册详情"
+
+msgid "Successfully removed"
+msgstr "成功移除"
+
+msgid "from"
+msgstr "从"
+
+msgid "Bulk Enrollment"
+msgstr "批量注册"
+
+msgid "Enroll Multiple Students"
+msgstr "注册多名学生"
+
+msgid "Successfully enrolled"
+msgstr "成功注册"
+
+msgid "students"
+msgstr "名学生"
+
+msgid "Skipped"
+msgstr "跳过"
+
+msgid "students who were already enrolled"
+msgstr "名已注册的学生"
+
+msgid "Please select a course and at least one student"
+msgstr "请选择课程和至少一名学生"
+
+msgid "No students selected"
+msgstr "未选择学生"
+
+msgid "Select All"
+msgstr "全选"
+
+msgid "Deselect All"
+msgstr "取消全选"
+
+msgid "students selected"
+msgstr "名学生已选择"
+
+msgid "Clear"
+msgstr "清除"
+
+msgid "Enroll Selected Students"
+msgstr "注册已选学生"
+
+msgid "View Detailed Records"
+msgstr "查看详细记录"
+
+msgid "Final Grade"
+msgstr "最终成绩"
+
+msgid "Assessment Components & Scores"
+msgstr "评估组件与分数"
+
+msgid "Component"
+msgstr "组件"
+
+msgid "Weight"
+msgstr "权重"
+
+msgid "Your Score"
+msgstr "您的分数"
+
+msgid "No assessment components defined yet for this course."
+msgstr "该课程尚未定义评估组件。"
+
+msgid "University Academic"
+msgstr "大学学术"
+
+msgid "Performance Management"
+msgstr "绩效管理系统"
+
+msgid "& Early Warning System"
+msgstr "与预警系统"
+
+msgid "A comprehensive bilingual platform for managing academic records, tracking student performance, and implementing early intervention strategies to ensure student success."
+msgstr "一个全面的双语平台，用于管理学术记录、跟踪学生成绩并实施早期干预策略以确保学生成功。"
+
+msgid "Learn More"
+msgstr "了解更多"
+
+msgid "Real-time dashboards with GPA/CGPA tracking, attendance monitoring, and performance trends."
+msgstr "实时仪表板，包含GPA/CGPA跟踪、出勤监控和成绩趋势分析。"
+
+msgid "AI-powered risk assessment with multi-level warnings and automated intervention recommendations."
+msgstr "基于人工智能的风险评估，具有多级警告和自动干预建议。"
+
+msgid "Full English and Chinese language support for all interfaces and academic records."
+msgstr "所有界面和学术记录的完整英文和中文语言支持。"
+
+msgid "University Academic Performance System"
+msgstr "大学生学术成绩管理与预警系统"
+
+msgid "Key Features"
+msgstr "主要功能"
+
+msgid "Early Warning System"
+msgstr "早期预警系统"
+
+msgid "Programs"
+msgstr "课程项目"
+
+msgid "Semesters"
+msgstr "学期"
+
+msgid "Course Offerings"
+msgstr "课程开设"
+
+msgid "Audit Logs"
+msgstr "审计日志"
+
+msgid "Activate Accounts"
+msgstr "激活账户"
+
+msgid "Performance Analytics"
+msgstr "绩效分析"
+
+msgid "Warning Center"
+msgstr "预警中心"
+
+msgid "Transcript"
+msgstr "成绩单"
+
+msgid "My Results"
+msgstr "我的成绩"
+
+msgid "GPA / CGPA"
+msgstr "GPA / 累积GPA"
+
+msgid "Change Password"
+msgstr "修改密码"
+
+msgid "No announcements"
+msgstr "无公告"
+
+msgid "Manage"
+msgstr "管理"
+
+msgid "Pinned"
+msgstr "置顶"

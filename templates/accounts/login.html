@@ -1,0 +1,83 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Login" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center min-vh-75 align-items-center">
+        <div class="col-md-5 col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-mortarboard-fill display-5 text-primary"></i>
+                        </div>
+                        <h4 class="mb-1">{{ site_name }}</h4>
+                        <p class="text-muted small">{% trans "Sign in to your account" %}</p>
+                    </div>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label }}</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.username.errors.0 }}
+                            </div>
+                            {% endif %}
+                            <div class="form-text small text-muted">
+                                {% trans "Use your Email or Student/Teacher ID" %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.password.errors.0 }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="remember" id="remember">
+                                <label class="form-check-label small" for="remember">
+                                    {% trans "Remember me" %}
+                                </label>
+                            </div>
+                            <a href="{% url 'accounts:password_reset' %}" class="small text-decoration-none">
+                                {% trans "Forgot password?" %}
+                            </a>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>{% trans "Sign In" %}
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <p class="small text-muted">
+                            <i class="bi bi-shield-check me-1"></i>{% trans "Secure connection" %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

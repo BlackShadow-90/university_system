@@ -1,0 +1,122 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Course Analytics" %} - {{ offering.course.code }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_dashboard' %}">{% trans "Teacher Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_analytics' %}">{% trans "Analytics" %}</a></li>
+<li class="breadcrumb-item active">{{ offering.course.code }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>{{ offering.course.code }} - {% trans "Performance Analytics" %}</h2>
+        <p class="text-muted mb-0">{{ offering.course.title_en }} | {{ offering.semester.name_en }}</p>
+    </div>
+    <a href="{% url 'teacher_portal:teacher_course_detail' offering.pk %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>{% trans "Back to Course" %}
+    </a>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="stat-icon bg-primary bg-opacity-10 text-primary mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="bi bi-people fs-4"></i>
+                </div>
+                <h3 class="mb-1">{{ offering.enrolled_count }}</h3>
+                <p class="text-muted mb-0">{% trans "Enrolled Students" %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="stat-icon bg-success bg-opacity-10 text-success mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="bi bi-check-circle fs-4"></i>
+                </div>
+                <h3 class="mb-1">-</h3>
+                <p class="text-muted mb-0">{% trans "Pass Rate" %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="stat-icon bg-info bg-opacity-10 text-info mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="bi bi-graph-up fs-4"></i>
+                </div>
+                <h3 class="mb-1">-</h3>
+                <p class="text-muted mb-0">{% trans "Average Grade" %}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div class="stat-icon bg-warning bg-opacity-10 text-warning mx-auto mb-3 rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                    <i class="bi bi-calendar-check fs-4"></i>
+                </div>
+                <h3 class="mb-1">-</h3>
+                <p class="text-muted mb-0">{% trans "Avg. Attendance" %}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <!-- Assessment Performance -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-clipboard-data me-2"></i>{% trans "Assessment Performance" %}</h5>
+            </div>
+            <div class="card-body">
+                {% for component in offering.assessment_components.all %}
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <h6>{{ component.name }}</h6>
+                        <span class="text-muted">{{ component.weight_percentage }}%</span>
+                    </div>
+                    <div class="progress" style="height: 24px;">
+                        <div class="progress-bar" role="progressbar" style="width: 0%">-</div>
+                    </div>
+                    <small class="text-muted">{% trans "Scores not yet entered" %}</small>
+                </div>
+                {% empty %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    {% trans "No assessment components configured for this course." %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <!-- Quick Actions -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-lightning me-2"></i>{% trans "Quick Actions" %}</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'teacher_portal:teacher_attendance_entry' offering.pk %}" class="btn btn-outline-success">
+                        <i class="bi bi-calendar-check me-2"></i>{% trans "Take Attendance" %}
+                    </a>
+                    <a href="{% url 'teacher_portal:teacher_marks_entry' offering.pk %}" class="btn btn-outline-info">
+                        <i class="bi bi-pencil me-2"></i>{% trans "Enter Marks" %}
+                    </a>
+                    <a href="{% url 'teacher_portal:teacher_course_students' offering.pk %}" class="btn btn-outline-primary">
+                        <i class="bi bi-people me-2"></i>{% trans "View Students" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

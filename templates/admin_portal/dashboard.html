@@ -1,0 +1,233 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Admin Dashboard" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item active">{% trans "Admin Dashboard" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Admin Dashboard" %}</h2>
+    {% if active_semester %}
+    <span class="badge bg-primary">{{ active_semester.display_name }}</span>
+    {% endif %}
+</div>
+
+<!-- Statistics Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="dashboard-stat text-center">
+            <div class="stat-icon bg-primary bg-opacity-10 text-primary mx-auto mb-3">
+                <i class="bi bi-mortarboard"></i>
+            </div>
+            <h3 class="mb-1">{{ total_students }}</h3>
+            <p class="text-muted mb-0">{% trans "Total Students" %}</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-stat text-center">
+            <div class="stat-icon bg-info bg-opacity-10 text-info mx-auto mb-3">
+                <i class="bi bi-person-badge"></i>
+            </div>
+            <h3 class="mb-1">{{ total_teachers }}</h3>
+            <p class="text-muted mb-0">{% trans "Total Teachers" %}</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-stat text-center">
+            <div class="stat-icon bg-success bg-opacity-10 text-success mx-auto mb-3">
+                <i class="bi bi-building"></i>
+            </div>
+            <h3 class="mb-1">{{ total_departments }}</h3>
+            <p class="text-muted mb-0">{% trans "Departments" %}</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-stat text-center">
+            <div class="stat-icon bg-warning bg-opacity-10 text-warning mx-auto mb-3">
+                <i class="bi bi-book"></i>
+            </div>
+            <h3 class="mb-1">{{ total_courses }}</h3>
+            <p class="text-muted mb-0">{% trans "Active Courses" %}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Warning Alerts -->
+{% if students_at_risk > 0 %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="alert alert-warning d-flex align-items-center">
+            <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
+            <div>
+                <strong>{% trans "At-Risk Students Alert!" %}</strong>
+                {% blocktrans with at_risk=students_at_risk critical=critical_warnings %}
+                There are currently {{ at_risk }} students at risk ({{ critical }} critical).
+                {% endblocktrans %}
+                <a href="{% url 'admin_portal:admin_warnings' %}">{% trans "View warnings" %}</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Charts Row with Data Attributes -->
+<div class="row g-4 mb-4" id="charts-container" 
+     data-green="{{ total_students|default:100 }}"
+     data-yellow="10"
+     data-orange="5"
+     data-red="{{ critical_warnings|default:0 }}">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>{% trans "Performance Overview" %}</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="performanceChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-exclamation-circle me-2"></i>{% trans "Warning Distribution" %}</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="warningChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Data -->
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-people me-2"></i>{% trans "Recent Students" %}</h5>
+                <a href="{% url 'admin_portal:admin_students' %}" class="btn btn-sm btn-outline-primary">{% trans "View All" %}</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>{% trans "Student ID" %}</th>
+                                <th>{% trans "Name" %}</th>
+                                <th>{% trans "Program" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for student in recent_students %}
+                            <tr>
+                                <td>{{ student.student_no }}</td>
+                                <td>{{ student.user.get_full_name }}</td>
+                                <td>{{ student.program.code }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">{% trans "No students found" %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-megaphone me-2"></i>{% trans "Latest Announcements" %}</h5>
+                <a href="{% url 'admin_portal:admin_announcements' %}" class="btn btn-sm btn-outline-primary">{% trans "Manage" %}</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% load simple_trans %}
+                    {% for announcement in recent_announcements %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">{{ announcement|announcement_title }}</h6>
+                            <small class="text-muted">{{ announcement.published_at|date:"M d, Y" }}</small>
+                        </div>
+                        {% if announcement.is_pinned %}
+                        <span class="badge bg-warning">{% trans "Pinned" %}</span>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <div class="list-group-item text-center text-muted">{% trans "No announcements" %}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Read chart data from HTML data attributes
+const chartsContainer = document.getElementById('charts-container');
+const greenCount = parseInt(chartsContainer.dataset.green) || 0;
+const yellowCount = parseInt(chartsContainer.dataset.yellow) || 0;
+const orangeCount = parseInt(chartsContainer.dataset.orange) || 0;
+const redCount = parseInt(chartsContainer.dataset.red) || 0;
+
+// Performance Chart
+const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+new Chart(performanceCtx, {
+    type: 'line',
+    data: {
+        labels: ['{% trans "Sem 1" %}', '{% trans "Sem 2" %}', '{% trans "Sem 3" %}', '{% trans "Sem 4" %}', '{% trans "Sem 5" %}', '{% trans "Sem 6" %}'],
+        datasets: [{
+            label: '{% trans "Average GPA" %}',
+            data: [3.2, 3.1, 3.3, 3.4, 3.2, 3.5],
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: false,
+                min: 0,
+                max: 4.0
+            }
+        }
+    }
+});
+
+// Warning Chart
+const warningCtx = document.getElementById('warningChart').getContext('2d');
+new Chart(warningCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['{% trans "Green" %}', '{% trans "Yellow" %}', '{% trans "Orange" %}', '{% trans "Red" %}'],
+        datasets: [{
+            data: [greenCount, yellowCount, orangeCount, redCount],
+            backgroundColor: ['#10b981', '#f59e0b', '#f97316', '#ef4444']
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

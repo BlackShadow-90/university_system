@@ -1,0 +1,77 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Settings" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Settings" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "System Settings" %}</h2>
+</div>
+
+<div class="row g-4">
+    <!-- Grade Policies -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-award me-2"></i>{% trans "Grade Policies" %}</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">{% trans "Manage grading schemes, grade mappings, and passing criteria." %}</p>
+                <a href="{% url 'admin_portal:admin_grade_policy' %}" class="btn btn-outline-primary">
+                    <i class="bi bi-gear me-1"></i>{% trans "Manage Grade Policies" %}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Configuration -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-sliders me-2"></i>{% trans "System Configuration" %}</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">{% trans "Configure system-wide settings, academic years, and semester schedules." %}</p>
+                <a href="{% url 'admin_portal:admin_settings' %}" class="btn btn-outline-primary">
+                    <i class="bi bi-gear me-1"></i>{% trans "System Configuration" %}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Warning Rules -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>{% trans "Early Warning Rules" %}</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">{% trans "Configure risk thresholds and warning level criteria." %}</p>
+                <a href="{% url 'admin_portal:admin_warning_rules' %}" class="btn btn-outline-primary">
+                    <i class="bi bi-gear me-1"></i>{% trans "Manage Warning Rules" %}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Settings -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-envelope me-2"></i>{% trans "Email Settings" %}</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">{% trans "Configure email notifications and SMTP settings." %}</p>
+                <a href="{% url 'admin_portal:admin_settings' %}" class="btn btn-outline-primary">
+                    <i class="bi bi-gear me-1"></i>{% trans "Email Configuration" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

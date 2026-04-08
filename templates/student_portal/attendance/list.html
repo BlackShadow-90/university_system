@@ -1,0 +1,74 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Attendance" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="/student-portal/">{% trans "Student Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Attendance" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Attendance" %}</h2>
+</div>
+
+<!-- Attendance List -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-calendar-check me-2"></i>{% trans "Course Attendance" %}</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>{% trans "Course" %}</th>
+                        <th>{% trans "Total Classes" %}</th>
+                        <th>{% trans "Attended" %}</th>
+                        <th>{% trans "Rate" %}</th>
+                        <th>{% trans "Status" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enrollment in enrollments %}
+                    <tr>
+                        <td>
+                            <strong>{{ enrollment.course_offering.course.code }}</strong><br>
+                            <small class="text-muted">{{ enrollment.course_offering.course.get_title }}</small>
+                        </td>
+                        <td>{{ enrollment.total_classes }}</td>
+                        <td>{{ enrollment.attended_classes }}</td>
+                        <td>
+                            {% if enrollment.attendance_percentage %}
+                            <span class="badge bg-{% if enrollment.attendance_percentage >= 80 %}success{% elif enrollment.attendance_percentage >= 60 %}warning{% else %}danger{% endif %}">
+                                {{ enrollment.attendance_percentage }}%
+                            </span>
+                            {% else %}
+                            <span class="badge bg-secondary">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if enrollment.attendance_percentage >= 80 %}
+                            <span class="badge bg-success">{% trans "Good" %}</span>
+                            {% elif enrollment.attendance_percentage >= 60 %}
+                            <span class="badge bg-warning">{% trans "Warning" %}</span>
+                            {% else %}
+                            <span class="badge bg-danger">{% trans "Critical" %}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                            {% trans "No courses found" %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

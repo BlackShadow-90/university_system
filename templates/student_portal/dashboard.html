@@ -1,0 +1,176 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Student Dashboard" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item active">{% trans "Student Dashboard" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Student Dashboard" %}</h2>
+    <span class="text-muted">{% trans "Welcome" %}, {{ user.get_full_name }}</span>
+</div>
+
+<!-- Warning Alert -->
+{% if warning_level != 'green' %}
+<div class="alert alert-{% if warning_level == 'red' %}danger{% elif warning_level == 'orange' %}warning{% else %}warning{% endif %} d-flex align-items-center mb-4">
+    <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
+    <div>
+        <strong>{% trans "Academic Warning!" %}</strong>
+        {% trans "Please check your" %} <a href="/student-portal/warnings/">{% trans "Warning Center" %}</a> {% trans "for details and recommended actions." %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Statistics Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="dashboard-stat text-center">
+            <div class="stat-icon bg-primary bg-opacity-10 text-primary mx-auto mb-3">
+                <i class="bi bi-graph-up"></i>
+            </div>
+            <h3 class="mb-1">{{ cgpa|default:"0.00" }}</h3>
+            <p class="text-muted mb-0">{% trans "CGPA" %}</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-stat text-center">
+            <div class="stat-icon bg-info bg-opacity-10 text-info mx-auto mb-3">
+                <i class="bi bi-book"></i>
+            </div>
+            <h3 class="mb-1">{{ current_gpa|default:"0.00" }}</h3>
+            <p class="text-muted mb-0">{% trans "Current GPA" %}</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-stat text-center">
+            <div class="stat-icon bg-success bg-opacity-10 text-success mx-auto mb-3">
+                <i class="bi bi-book-half"></i>
+            </div>
+            <h3 class="mb-1">{{ current_enrollments|length }}</h3>
+            <p class="text-muted mb-0">{% trans "Current Courses" %}</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="dashboard-stat text-center">
+            <div class="stat-icon bg-{% if warning_level == 'green' %}success{% elif warning_level == 'yellow' %}warning{% elif warning_level == 'orange' %}warning{% else %}danger{% endif %} bg-opacity-10 text-{% if warning_level == 'green' %}success{% elif warning_level == 'yellow' %}warning{% elif warning_level == 'orange' %}warning{% else %}danger{% endif %} mx-auto mb-3">
+                <i class="bi bi-shield-{% if warning_level == 'green' %}check{% else %}exclamation{% endif %}"></i>
+            </div>
+            <h3 class="mb-1">{{ warning_level|upper }}</h3>
+            <p class="text-muted mb-0">{% trans "Status" %}</p>
+        </div>
+    </div>
+</div>
+
+<!-- Current Courses -->
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-book me-2"></i>{% trans "Current Courses" %}</h5>
+                <a href="/student-portal/courses/" class="btn btn-sm btn-outline-primary">{% trans "View All" %}</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>{% trans "Course" %}</th>
+                                <th>{% trans "Attendance" %}</th>
+                                <th>{% trans "Grade" %}</th>
+                                <th>{% trans "Actions" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enrollment in current_enrollments %}
+                            <tr>
+                                <td>
+                                    <strong>{{ enrollment.course_offering.course.code }}</strong><br>
+                                    <small class="text-muted">{{ enrollment.course_offering.course.get_title }}</small>
+                                </td>
+                                <td>
+                                    {% with pct=enrollment.attendance_percentage|default:0 %}
+                                    <span class="badge {% if pct >= 75 %}bg-success{% elif pct >= 60 %}bg-warning{% else %}bg-danger{% endif %}">
+                                        {{ enrollment.attendance_percentage|floatformat:1 }}%
+                                    </span>
+                                    {% endwith %}
+                                </td>
+                                <td>
+                                    {% if enrollment.letter_grade %}
+                                    <span class="badge bg-{% if enrollment.pass_fail_status == 'pass' %}success{% else %}danger{% endif %}">{{ enrollment.letter_grade }}</span>
+                                    {% else %}
+                                    <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="/student-portal/course/{{ enrollment.pk }}/" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                                    {% trans "No current enrollments" %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <!-- Quick Actions -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-lightning me-2"></i>{% trans "Quick Actions" %}</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="/student-portal/results/" class="btn btn-outline-primary">
+                        <i class="bi bi-file-earmark-text me-2"></i>{% trans "My Results" %}
+                    </a>
+                    <a href="/student-portal/gpa/" class="btn btn-outline-info">
+                        <i class="bi bi-graph-up me-2"></i>{% trans "GPA / CGPA" %}
+                    </a>
+                    <a href="/student-portal/transcript/" class="btn btn-outline-success">
+                        <i class="bi bi-file-earmark-pdf me-2"></i>{% trans "Transcript" %}
+                    </a>
+                    {% if warning_level != 'green' %}
+                    <a href="/student-portal/warnings/" class="btn btn-outline-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>{% trans "Warning Center" %}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Latest Announcements -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-megaphone me-2"></i>{% trans "Announcements" %}</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="list-group list-group-flush">
+                    {% load simple_trans %}
+                    {% for announcement in latest_announcements %}
+                    <div class="list-group-item">
+                        <h6 class="mb-1">{{ announcement|announcement_title }}</h6>
+                        <small class="text-muted">{{ announcement.published_at|date:"M d, Y" }}</small>
+                    </div>
+                    {% empty %}
+                    <div class="list-group-item text-center text-muted py-3">
+                        {% trans "No announcements" %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

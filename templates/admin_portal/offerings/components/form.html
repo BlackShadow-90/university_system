@@ -1,0 +1,159 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}
+{% if is_create %}{% trans "Add Assessment Component" %}{% else %}{% trans "Edit Assessment Component" %}{% endif %} - {{ offering.course.code }}
+{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_offerings' %}">{% trans "Course Offerings" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_offering_components' offering.pk %}">{% trans "Components" %}</a></li>
+<li class="breadcrumb-item active">{% if is_create %}{% trans "Add" %}{% else %}{% trans "Edit" %}{% endif %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+        {% if is_create %}
+        {% trans "Add Assessment Component" %}
+        {% else %}
+        {% trans "Edit Assessment Component" %}
+        {% endif %}
+    </h2>
+    <a href="{% url 'admin_portal:admin_offering_components' offering.pk %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>{% trans "Back" %}
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">{{ offering.course.code }} - {{ offering.course.title_en }}</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label for="id_name" class="form-label">{% trans "Component Name" %} *</label>
+                            <input type="text" name="name" id="id_name" class="form-control" 
+                                   value="{{ form.instance.name|default:'' }}" required
+                                   placeholder="{% trans 'e.g., Midterm Exam, Assignment 1' %}">
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="id_order" class="form-label">{% trans "Display Order" %}</label>
+                            <input type="number" name="order" id="id_order" class="form-control" 
+                                   value="{{ form.instance.order|default:'0' }}" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_assessment_type" class="form-label">{% trans "Assessment Type" %} *</label>
+                            <select name="assessment_type" id="id_assessment_type" class="form-select" required>
+                                <option value="">{% trans "Select type..." %}</option>
+                                <option value="attendance" {% if form.instance.assessment_type == 'attendance' %}selected{% endif %}>{% trans "Attendance" %}</option>
+                                <option value="assignment" {% if form.instance.assessment_type == 'assignment' %}selected{% endif %}>{% trans "Assignment" %}</option>
+                                <option value="quiz" {% if form.instance.assessment_type == 'quiz' %}selected{% endif %}>{% trans "Quiz" %}</option>
+                                <option value="midterm" {% if form.instance.assessment_type == 'midterm' %}selected{% endif %}>{% trans "Midterm Exam" %}</option>
+                                <option value="lab" {% if form.instance.assessment_type == 'lab' %}selected{% endif %}>{% trans "Lab Work" %}</option>
+                                <option value="project" {% if form.instance.assessment_type == 'project' %}selected{% endif %}>{% trans "Project" %}</option>
+                                <option value="presentation" {% if form.instance.assessment_type == 'presentation' %}selected{% endif %}>{% trans "Presentation" %}</option>
+                                <option value="final" {% if form.instance.assessment_type == 'final' %}selected{% endif %}>{% trans "Final Exam" %}</option>
+                                <option value="participation" {% if form.instance.assessment_type == 'participation' %}selected{% endif %}>{% trans "Participation" %}</option>
+                                <option value="other" {% if form.instance.assessment_type == 'other' %}selected{% endif %}>{% trans "Other" %}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_weight_percentage" class="form-label">
+                                {% trans "Weight (%)" %} *
+                                <small class="text-muted">({% trans "Current total:" %} {{ current_total_weight }}%)</small>
+                            </label>
+                            <input type="number" name="weight_percentage" id="id_weight_percentage" class="form-control" 
+                                   value="{{ form.instance.weight_percentage|default:'0' }}" 
+                                   min="0" max="100" step="0.01" required>
+                            <div class="form-text">{% trans "Percentage contribution to final grade" %}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="id_max_score" class="form-label">{% trans "Maximum Score" %} *</label>
+                            <input type="number" name="max_score" id="id_max_score" class="form-control" 
+                                   value="{{ form.instance.max_score|default:'100' }}" 
+                                   min="0" step="0.01" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="id_due_date" class="form-label">{% trans "Due Date" %}</label>
+                            <input type="date" name="due_date" id="id_due_date" class="form-control" 
+                                   value="{{ form.instance.due_date|date:'Y-m-d'|default:'' }}">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_description" class="form-label">{% trans "Description" %}</label>
+                        <textarea name="description" id="id_description" class="form-control" rows="3" 
+                                  placeholder="{% trans 'Optional description or instructions...' %}">{{ form.instance.description|default:'' }}</textarea>
+                    </div>
+                    
+                    {% if not is_create %}
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" name="is_published" id="id_is_published" class="form-check-input" 
+                                   {% if form.instance.is_published %}checked{% endif %}>
+                            <label for="id_is_published" class="form-check-label">
+                                {% trans "Publish scores to students" %}
+                            </label>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {% if is_create %}{% trans "Add Component" %}{% else %}{% trans "Save Changes" %}{% endif %}
+                        </button>
+                        <a href="{% url 'admin_portal:admin_offering_components' offering.pk %}" class="btn btn-outline-secondary">
+                            {% trans "Cancel" %}
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">{% trans "Existing Components" %}</h6>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for comp in existing_components %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>{{ comp.name }}</span>
+                        <span class="badge bg-primary rounded-pill">{{ comp.weight_percentage }}%</span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-muted text-center py-3">
+                        {% trans "No components yet" %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
+        <div class="alert alert-info mt-3">
+            <h6><i class="bi bi-info-circle me-1"></i>{% trans "Tips" %}</h6>
+            <ul class="small mb-0">
+                <li>{% trans "Total weight must equal 100%" %}</li>
+                <li>{% trans "Common: Attendance (10%), Assignments (30%), Midterm (30%), Final (30%)" %}</li>
+                <li>{% trans "Set due dates to help students track deadlines" %}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,172 @@
+{% load i18n %}
+<!-- Default sidebar navigation for authenticated users -->
+<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+    <span>{% trans "Menu" %}</span>
+</h6>
+
+<ul class="nav flex-column">
+    {% if user.is_admin or user.is_superuser %}
+    <!-- Admin Navigation -->
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'admin_dashboard' %}active{% endif %}" href="/admin-portal/">
+            <i class="bi bi-speedometer2 me-2"></i>{% trans "Dashboard" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin-portal/users/">
+            <i class="bi bi-people me-2"></i>{% trans "Users" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin-portal/students/">
+            <i class="bi bi-mortarboard me-2"></i>{% trans "Students" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin-portal/teachers/">
+            <i class="bi bi-person-badge me-2"></i>{% trans "Teachers" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin-portal/departments/">
+            <i class="bi bi-building me-2"></i>{% trans "Departments" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin-portal/programs/">
+            <i class="bi bi-diagram-3 me-2"></i>{% trans "Programs" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin-portal/semesters/">
+            <i class="bi bi-calendar3 me-2"></i>{% trans "Semesters" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin-portal/courses/">
+            <i class="bi bi-book me-2"></i>{% trans "Courses" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin-portal/offerings/">
+            <i class="bi bi-calendar-event me-2"></i>{% trans "Course Offerings" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin-portal/enrollments/">
+            <i class="bi bi-journal-text me-2"></i>{% trans "Enrollments" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin-portal/warnings/">
+            <i class="bi bi-exclamation-triangle me-2"></i>{% trans "Warnings" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin-portal/announcements/">
+            <i class="bi bi-megaphone me-2"></i>{% trans "Announcements" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin-portal/reports/">
+            <i class="bi bi-graph-up me-2"></i>{% trans "Reports" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin-portal/settings/">
+            <i class="bi bi-gear me-2"></i>{% trans "Settings" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/admin-portal/audit-logs/">
+            <i class="bi bi-clock-history me-2"></i>{% trans "Audit Logs" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'accounts:admin_activate' %}">
+            <i class="bi bi-person-check me-2"></i>{% trans "Activate Accounts" %}
+        </a>
+    </li>
+    
+    {% elif user.is_teacher %}
+    <!-- Teacher Navigation -->
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'teacher_dashboard' %}active{% endif %}" href="{% url 'teacher_portal:teacher_dashboard' %}">
+            <i class="bi bi-speedometer2 me-2"></i>{% trans "Dashboard" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'teacher_courses' %}active{% endif %}" href="{% url 'teacher_portal:teacher_courses' %}">
+            <i class="bi bi-book me-2"></i>{% trans "My Courses" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'teacher_attendance' %}active{% endif %}" href="{% url 'teacher_portal:teacher_attendance' %}">
+            <i class="bi bi-calendar-check me-2"></i>{% trans "Attendance" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'teacher_marks' %}active{% endif %}" href="{% url 'teacher_portal:teacher_marks' %}">
+            <i class="bi bi-pencil-square me-2"></i>{% trans "Enter Marks" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'teacher_at_risk' %}active{% endif %}" href="{% url 'teacher_portal:teacher_at_risk' %}">
+            <i class="bi bi-exclamation-triangle me-2"></i>{% trans "At-Risk Students" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'teacher_analytics' %}active{% endif %}" href="{% url 'teacher_portal:teacher_analytics' %}">
+            <i class="bi bi-graph-up me-2"></i>{% trans "Performance Analytics" %}
+        </a>
+    </li>
+    <li class="nav-item mt-3">
+        <a class="nav-link" href="{% url 'teacher_portal:teacher_profile' %}">
+            <i class="bi bi-person-circle me-2"></i>{% trans "My Profile" %}
+        </a>
+    </li>
+    
+    {% elif user.is_student %}
+    <!-- Student Navigation -->
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'student_dashboard' %}active{% endif %}" href="/student-portal/">
+            <i class="bi bi-speedometer2 me-2"></i>{% trans "Dashboard" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/student-portal/courses/">
+            <i class="bi bi-book me-2"></i>{% trans "My Courses" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/student-portal/results/">
+            <i class="bi bi-file-earmark-text me-2"></i>{% trans "My Results" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/student-portal/gpa/">
+            <i class="bi bi-graph-up me-2"></i>{% trans "GPA / CGPA" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/student-portal/attendance/">
+            <i class="bi bi-calendar-check me-2"></i>{% trans "Attendance" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/student-portal/warnings/">
+            <i class="bi bi-exclamation-triangle me-2"></i>{% trans "Warning Center" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/student-portal/transcript/">
+            <i class="bi bi-file-earmark-pdf me-2"></i>{% trans "Transcript" %}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'student_portal:student_profile' %}">
+            <i class="bi bi-person me-2"></i>{% trans "My Profile" %}
+        </a>
+    </li>
+    {% endif %}
+</ul>

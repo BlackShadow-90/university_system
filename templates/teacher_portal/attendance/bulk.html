@@ -1,0 +1,61 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Bulk Attendance" %} - {{ offering.course.code }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_dashboard' %}">{% trans "Teacher Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_courses' %}">{% trans "My Courses" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_course_detail' offering.pk %}">{{ offering.course.code }}</a></li>
+<li class="breadcrumb-item active">{% trans "Bulk Attendance" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ offering.course.code }} - {% trans "Bulk Attendance Entry" %}</h2>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-calendar-range me-2"></i>{% trans "Date Range Attendance" %}</h5>
+    </div>
+    <div class="card-body">
+        <form method="post" action="{% url 'teacher_portal:teacher_bulk_attendance' offering.pk %}">
+            {% csrf_token %}
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Start Date" %}</label>
+                    <input type="date" name="start_date" class="form-control" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "End Date" %}</label>
+                    <input type="date" name="end_date" class="form-control" required>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">{% trans "Default Status for All Dates" %}</label>
+                <select name="default_status" class="form-select">
+                    <option value="present">{% trans "Present (for all students)" %}</option>
+                    <option value="absent">{% trans "Absent (for all students)" %}</option>
+                </select>
+            </div>
+            
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                {% trans "This will create attendance records for all enrolled students for each date in the range. You can then edit individual records if needed." %}
+            </div>
+            
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'teacher_portal:teacher_attendance' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>{% trans "Back" %}
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-calendar-plus me-1"></i>{% trans "Generate Records" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

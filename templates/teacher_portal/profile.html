@@ -1,0 +1,187 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "My Profile" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "My Profile" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "My Profile" %}</h2>
+    <a href="{% url 'teacher_portal:teacher_dashboard' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>{% trans "Back to Dashboard" %}
+    </a>
+</div>
+
+<div class="row">
+    <!-- Profile Summary Card -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">{% trans "Profile Summary" %}</h5>
+            </div>
+            <div class="card-body text-center">
+                {% if teacher.user.avatar %}
+                <img src="{{ teacher.user.avatar.url }}" alt="{{ teacher.user.get_full_name }}" 
+                     class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                {% else %}
+                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mb-3 mx-auto" 
+                     style="width: 150px; height: 150px; font-size: 60px;">
+                    <i class="bi bi-person"></i>
+                </div>
+                {% endif %}
+                <h5>{{ teacher.user.get_full_name }}</h5>
+                <p class="text-muted mb-1">{{ teacher.get_title_display }}</p>
+                <p class="text-muted mb-1">{{ teacher.teacher_no }}</p>
+                <p class="text-muted">{{ teacher.department.get_name }}</p>
+                
+                <hr>
+                
+                <div class="text-start small">
+                    <p class="mb-1"><i class="bi bi-envelope me-2"></i>{{ teacher.user.email }}</p>
+                    {% if teacher.user.phone %}
+                    <p class="mb-1"><i class="bi bi-telephone me-2"></i>{{ teacher.user.phone }}</p>
+                    {% endif %}
+                    {% if teacher.office_location %}
+                    <p class="mb-1"><i class="bi bi-geo-alt me-2"></i>{{ teacher.office_location }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Form -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">{% trans "Edit Profile Information" %}</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <!-- Personal Information -->
+                    <h6 class="text-muted mb-3">{% trans "Personal Information" %}</h6>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{% trans "Full Name (English)" %}</label>
+                            <input type="text" name="full_name_en" class="form-control" value="{{ teacher.user.full_name_en }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{% trans "Full Name (Chinese)" %}</label>
+                            <input type="text" name="full_name_zh" class="form-control" value="{{ teacher.user.full_name_zh }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{% trans "Phone" %}</label>
+                            <input type="text" name="phone" class="form-control" value="{{ teacher.user.phone|default:'' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{% trans "Profile Photo" %}</label>
+                            <input type="file" name="avatar" class="form-control" accept="image/*">
+                        </div>
+                    </div>
+
+                    <!-- Office Information -->
+                    <h6 class="text-muted mb-3">{% trans "Office Information" %}</h6>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{% trans "Office Location" %}</label>
+                            <input type="text" name="office_location" class="form-control" value="{{ teacher.office_location|default:'' }}"
+                                   placeholder="{% trans 'e.g., Building A, Room 101' %}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{% trans "Office Hours" %}</label>
+                            <input type="text" name="office_hours" class="form-control" value="{{ teacher.office_hours|default:'' }}"
+                                   placeholder="{% trans 'e.g., Mon 10:00-12:00, Wed 14:00-16:00' %}">
+                        </div>
+                    </div>
+
+                    <!-- Online Presence -->
+                    <h6 class="text-muted mb-3">{% trans "Online Presence" %}</h6>
+                    <div class="row mb-4">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{% trans "Personal Website" %}</label>
+                            <input type="url" name="website" class="form-control" value="{{ teacher.website|default:'' }}"
+                                   placeholder="https://your-website.com">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{% trans "LinkedIn Profile" %}</label>
+                            <input type="url" name="linkedin" class="form-control" value="{{ teacher.linkedin|default:'' }}"
+                                   placeholder="https://linkedin.com/in/yourprofile">
+                        </div>
+                    </div>
+
+                    <!-- Academic Information -->
+                    <h6 class="text-muted mb-3">{% trans "Academic Information" %}</h6>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Specialization / Research Area" %}</label>
+                        <input type="text" name="specialization" class="form-control" value="{{ teacher.specialization|default:'' }}"
+                               placeholder="{% trans 'e.g., Machine Learning, Data Science' %}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Education Background" %}</label>
+                        <textarea name="education_background" class="form-control" rows="3"
+                                  placeholder="{% trans 'List your degrees, universities, and graduation years' %}">{{ teacher.education_background|default:'' }}</textarea>
+                    </div>
+
+                    <!-- Research & Publications -->
+                    <h6 class="text-muted mb-3">{% trans "Research & Publications" %}</h6>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Research Interests" %}</label>
+                        <textarea name="research_interests" class="form-control" rows="3"
+                                  placeholder="{% trans 'Describe your research interests and areas of expertise' %}">{{ teacher.research_interests|default:'' }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Research Abilities" %}</label>
+                        <textarea name="research_abilities" class="form-control" rows="3"
+                                  placeholder="{% trans 'List your research skills, methodologies, and technical abilities' %}">{{ teacher.research_abilities|default:'' }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Publications" %}</label>
+                        <textarea name="publications" class="form-control" rows="4"
+                                  placeholder="{% trans 'List your key publications, papers, and research works' %}">{{ teacher.publications|default:'' }}</textarea>
+                    </div>
+
+                    <!-- Teaching & Experience -->
+                    <h6 class="text-muted mb-3">{% trans "Teaching & Experience" %}</h6>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Teaching Interests" %}</label>
+                        <textarea name="teaching_interests" class="form-control" rows="3"
+                                  placeholder="{% trans 'Courses and subjects you are interested in teaching' %}">{{ teacher.teaching_interests|default:'' }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Professional Experience" %}</label>
+                        <textarea name="professional_experience" class="form-control" rows="4"
+                                  placeholder="{% trans 'Your work experience and professional background' %}">{{ teacher.professional_experience|default:'' }}</textarea>
+                    </div>
+
+                    <!-- Awards & Honors -->
+                    <h6 class="text-muted mb-3">{% trans "Awards & Honors" %}</h6>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Awards and Honors" %}</label>
+                        <textarea name="awards_and_honors" class="form-control" rows="3"
+                                  placeholder="{% trans 'Awards, recognitions, and honors received' %}">{{ teacher.awards_and_honors|default:'' }}</textarea>
+                    </div>
+
+                    <!-- Biography -->
+                    <h6 class="text-muted mb-3">{% trans "Biography" %}</h6>
+                    <div class="mb-4">
+                        <label class="form-label">{% trans "Bio" %}</label>
+                        <textarea name="bio" class="form-control" rows="4"
+                                  placeholder="{% trans 'Write a brief biography about yourself' %}">{{ teacher.bio|default:'' }}</textarea>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i>{% trans "Save Profile" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

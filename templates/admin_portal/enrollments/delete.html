@@ -1,0 +1,72 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Delete Enrollment" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_enrollments' %}">{% trans "Enrollments" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Delete Enrollment" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-exclamation-triangle me-2"></i>{% trans "Delete Enrollment" %}
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning" role="alert">
+                    <i class="bi bi-info-circle me-2"></i>
+                    {% trans "Are you sure you want to remove this student from the course? This action cannot be undone." %}
+                </div>
+                
+                <div class="mb-4">
+                    <h6>{% trans "Enrollment Details" %}</h6>
+                    <table class="table table-sm">
+                        <tr>
+                            <td><strong>{% trans "Student:" %}</strong></td>
+                            <td>{{ enrollment.student.student_no }} - {{ enrollment.student.user.get_full_name }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>{% trans "Course:" %}</strong></td>
+                            <td>{{ enrollment.course_offering.course.code }} - {{ enrollment.course_offering.course.title_en }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>{% trans "Semester:" %}</strong></td>
+                            <td>{{ enrollment.course_offering.semester }}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>{% trans "Status:" %}</strong></td>
+                            <td>
+                                <span class="badge bg-{% if enrollment.enroll_status == 'enrolled' %}success{% elif enrollment.enroll_status == 'dropped' %}danger{% else %}secondary{% endif %}">
+                                    {{ enrollment.get_enroll_status_display }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>{% trans "Enrolled Date:" %}</strong></td>
+                            <td>{{ enrollment.enrolled_at|date:"M d, Y" }}</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'admin_portal:admin_enrollments' %}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>{% trans "Cancel" %}
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>{% trans "Delete Enrollment" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

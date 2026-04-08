@@ -1,0 +1,69 @@
+# English Translation File for University System
+# Copyright (C) 2026
+# This file is distributed under the same license as the university_system package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: university_system 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-28 05:00+0800\n"
+"PO-Revision-Date: 2026-03-28 05:00+0800\n"
+"Last-Translator: \n"
+"Language-Team: English\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/public/landing.html:4
+msgid "Welcome"
+msgstr "Welcome"
+
+#: templates/public/landing.html:14
+msgid "University Academic"
+msgstr "University Academic"
+
+#: templates/public/landing.html:15
+msgid "Performance Management"
+msgstr "Performance Management"
+
+#: templates/public/landing.html:16
+msgid "& Early Warning System"
+msgstr "& Early Warning System"
+
+#: templates/base/base.html:191
+msgid "Profile"
+msgstr "Profile"
+
+#: templates/base/base.html:193
+msgid "Change Password"
+msgstr "Change Password"
+
+#: templates/base/base.html:196
+msgid "Logout"
+msgstr "Logout"
+
+#: templates/base/base.html:200
+msgid "Login"
+msgstr "Login"
+
+#: templates/accounts/login.html:5 templates/accounts/login.html:25
+msgid "Sign In"
+msgstr "Sign In"
+
+#: templates/accounts/login.html:32
+msgid "Username"
+msgstr "Username"
+
+#: templates/accounts/login.html:38
+msgid "Password"
+msgstr "Password"
+
+#: templates/accounts/login.html:45
+msgid "Remember me"
+msgstr "Remember me"
+
+#: templates/accounts/login.html:50
+msgid "Forgot Password?"
+msgstr "Forgot Password?"

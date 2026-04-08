@@ -1,0 +1,110 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "GPA / CGPA" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="/student-portal/">{% trans "Student Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "GPA / CGPA" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "GPA / CGPA" %}</h2>
+</div>
+
+<!-- GPA Summary -->
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="text-muted mb-3">{% trans "Cumulative GPA (CGPA)" %}</h5>
+                <h1 class="display-4 text-primary mb-2">{{ cgpa|default:"0.00" }}</h1>
+                <p class="text-muted mb-0">{% trans "Total Credits Earned" %}: {{ total_credits }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="text-muted mb-3">{% trans "GPA Scale" %}</h5>
+                <table class="table table-sm">
+                    <tr>
+                        <td>{% trans "4.00" %}</td>
+                        <td>{% trans "A+" %}</td>
+                        <td>{% trans "Excellent" %}</td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "3.70" %}</td>
+                        <td>{% trans "A" %}</td>
+                        <td>{% trans "Very Good" %}</td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "3.30" %}</td>
+                        <td>{% trans "B+" %}</td>
+                        <td>{% trans "Good" %}</td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "3.00" %}</td>
+                        <td>{% trans "B" %}</td>
+                        <td>{% trans "Above Average" %}</td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "2.70" %}</td>
+                        <td>{% trans "C+" %}</td>
+                        <td>{% trans "Average" %}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Semester Summaries -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>{% trans "Semester History" %}</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>{% trans "Semester" %}</th>
+                        <th>{% trans "GPA" %}</th>
+                        <th>{% trans "Credits" %}</th>
+                        <th>{% trans "Status" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for summary in semester_summaries %}
+                    <tr>
+                        <td>{{ summary.semester.display_name }}</td>
+                        <td>
+                            <span class="badge bg-{% if summary.gpa >= 3.5 %}success{% elif summary.gpa >= 2.5 %}warning{% else %}danger{% endif %}">
+                                {{ summary.gpa }}
+                            </span>
+                        </td>
+                        <td>{{ summary.credits_attempted }} / {{ summary.credits_earned }}</td>
+                        <td>
+                            {% if summary.academic_standing == 'good' %}
+                            <span class="badge bg-success">{% trans "Good Standing" %}</span>
+                            {% else %}
+                            <span class="badge bg-warning">{% trans "Probation" %}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                            {% trans "No semester data available" %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

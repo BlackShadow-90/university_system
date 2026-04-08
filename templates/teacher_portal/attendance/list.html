@@ -1,0 +1,60 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Attendance" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="/teacher-portal/">{% trans "Teacher Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Attendance" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Attendance Management" %}</h2>
+</div>
+
+<!-- Course Selection -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-calendar-check me-2"></i>{% trans "Select Course" %}</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>{% trans "Course" %}</th>
+                        <th>{% trans "Semester" %}</th>
+                        <th>{% trans "Students" %}</th>
+                        <th>{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for offering in course_offerings %}
+                    <tr>
+                        <td>
+                            <strong>{{ offering.course.code }}</strong><br>
+                            <small class="text-muted">{{ offering.course.get_title }}</small>
+                        </td>
+                        <td>{{ offering.semester.display_name }}</td>
+                        <td>{{ offering.enrollments.count }}</td>
+                        <td>
+                            <a href="{% url 'teacher_portal:teacher_attendance_entry' offering.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-calendar-check me-1"></i>{% trans "Manage" %}
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                            {% trans "No courses assigned" %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Warning Center" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'student_portal:student_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Warning Center" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Warning Center" %}</h2>
+    <a href="{% url 'student_portal:student_dashboard' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>{% trans "Back to Dashboard" %}
+    </a>
+</div>
+
+{% if active_warnings %}
+<div class="alert alert-warning mb-4">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    {% trans "You have active academic warnings. Please review the details below and take necessary actions." %}
+</div>
+{% else %}
+<div class="alert alert-success mb-4">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    {% trans "You have no active warnings. Keep up the good work!" %}
+</div>
+{% endif %}
+
+<!-- Active Warnings -->
+{% if active_warnings %}
+<div class="card mb-4">
+    <div class="card-header bg-warning text-dark">
+        <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>{% trans "Active Warnings" %}</h5>
+    </div>
+    <div class="card-body">
+        {% for warning in active_warnings %}
+        <div class="card mb-3 {% if warning.warning_level == 'red' %}border-danger{% elif warning.warning_level == 'orange' %}border-warning{% else %}border-info{% endif %}">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>{{ warning.semester.display_name }}</span>
+                <span class="badge {% if warning.warning_level == 'red' %}bg-danger{% elif warning.warning_level == 'orange' %}bg-orange{% else %}bg-warning{% endif %} fs-6">
+                    {{ warning.get_warning_level_display }}
+                </span>
+            </div>
+            <div class="card-body">
+                <h6 class="card-title">{% trans "Warning Details" %}</h6>
+                <table class="table table-borderless table-sm">
+                    <tr>
+                        <td width="40%"><strong>{% trans "Current GPA" %}</strong></td>
+                        <td>{{ warning.current_gpa|default:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Attendance Rate" %}</strong></td>
+                        <td>{{ warning.attendance_rate|default:"-" }}%</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Reason" %}</strong></td>
+                        <td>{{ warning.warning_reason }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Issued Date" %}</strong></td>
+                        <td>{{ warning.created_at|date:"Y-m-d" }}</td>
+                    </tr>
+                </table>
+
+                {% if warning.interventions.exists %}
+                <div class="mt-3">
+                    <h6>{% trans "Interventions" %}</h6>
+                    <ul class="list-group list-group-flush">
+                        {% for intervention in warning.interventions.all %}
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <span>{{ intervention.get_intervention_type_display }}</span>
+                                <span class="badge {% if intervention.status == 'completed' %}bg-success{% elif intervention.status == 'in_progress' %}bg-info{% else %}bg-secondary{% endif %}">
+                                    {{ intervention.get_status_display }}
+                                </span>
+                            </div>
+                            <small class="text-muted">{{ intervention.description|truncatewords:20 }}</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Academic Standing -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">{% trans "Academic Standing" %}</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td><strong>{% trans "Current CGPA" %}</strong></td>
+                        <td class="text-end">
+                            <span class="badge {% if student.cgpa >= 3.0 %}bg-success{% elif student.cgpa >= 2.0 %}bg-warning{% else %}bg-danger{% endif %} fs-6">
+                                {{ student.cgpa|default:"0.00" }}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Credits Earned" %}</strong></td>
+                        <td class="text-end">{{ student.total_credits|default:"0" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Academic Status" %}</strong></td>
+                        <td class="text-end">
+                            {% if student.cgpa >= 2.0 %}
+                                <span class="badge bg-success">{% trans "Good Standing" %}</span>
+                            {% else %}
+                                <span class="badge bg-danger">{% trans "Probation" %}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0">{% trans "Resources" %}</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'student_portal:student_results' %}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-journal-text me-2"></i>{% trans "View All Results" %}
+                    </a>
+                    <a href="{% url 'student_portal:student_attendance' %}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-calendar-check me-2"></i>{% trans "Check Attendance" %}
+                    </a>
+                    <a href="{% url 'student_portal:student_gpa' %}" class="list-group-item list-group-item-action">
+                        <i class="bi bi-graph-up me-2"></i>{% trans "GPA Analysis" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Warning History -->
+{% if warning_history %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">{% trans "Warning History" %}</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>{% trans "Semester" %}</th>
+                        <th>{% trans "Level" %}</th>
+                        <th>{% trans "Reason" %}</th>
+                        <th>{% trans "Status" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for warning in warning_history %}
+                    <tr>
+                        <td>{{ warning.semester.display_name }}</td>
+                        <td>
+                            <span class="badge {% if warning.warning_level == 'red' %}bg-danger{% elif warning.warning_level == 'orange' %}bg-warning{% else %}bg-info{% endif %}">
+                                {{ warning.get_warning_level_display }}
+                            </span>
+                        </td>
+                        <td>{{ warning.warning_reason|truncatewords:10 }}</td>
+                        <td>
+                            <span class="badge {% if warning.status == 'active' %}bg-warning{% else %}bg-success{% endif %}">
+                                {{ warning.get_status_display }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% if form.instance.pk %}{% trans "Edit Teacher" %}{% else %}{% trans "Add Teacher" %}{% endif %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_teachers' %}">{% trans "Teachers" %}</a></li>
+<li class="breadcrumb-item active">{% if form.instance.pk %}{% trans "Edit" %}{% else %}{% trans "Add" %}{% endif %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% if form.instance.pk %}{% trans "Edit Teacher" %}{% else %}{% trans "Add New Teacher" %}{% endif %}</h2>
+    <a href="{% url 'admin_portal:admin_teachers' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>{% trans "Back" %}
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <h5 class="mb-3">{% trans "Account Information" %}</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Email" %}</label>
+                    <input type="email" name="email" class="form-control" value="{{ request.POST.email|default:form.instance.user.email|default:'' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Full Name (English)" %}</label>
+                    <input type="text" name="full_name_en" class="form-control" value="{{ request.POST.full_name_en|default:form.instance.user.full_name_en|default:'' }}" required>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Full Name (Chinese)" %}</label>
+                    <input type="text" name="full_name_zh" class="form-control" value="{{ request.POST.full_name_zh|default:form.instance.user.full_name_zh|default:'' }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Phone Number" %}</label>
+                    <input type="tel" name="phone" class="form-control" value="{{ request.POST.phone|default:form.instance.user.phone|default:'' }}">
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <h5 class="mb-3">{% trans "Employment Information" %}</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Teacher Number" %}</label>
+                    <input type="text" name="teacher_no" class="form-control" value="{{ request.POST.teacher_no|default:form.instance.teacher_no|default:'' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Department" %}</label>
+                    <select name="department" class="form-select" required>
+                        <option value="">{% trans "Select Department" %}</option>
+                        {% for dept in departments %}
+                        <option value="{{ dept.pk }}" {% if request.POST.department == dept.pk|stringformat:"s" or form.instance.department_id == dept.pk %}selected{% endif %}>{{ dept.name_en }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Title" %}</label>
+                    <select name="title" class="form-select">
+                        <option value="lecturer" {% if request.POST.title == 'lecturer' or form.instance.title == 'lecturer' %}selected{% endif %}>{% trans "Lecturer" %}</option>
+                        <option value="assistant_professor" {% if request.POST.title == 'assistant_professor' or form.instance.title == 'assistant_professor' %}selected{% endif %}>{% trans "Assistant Professor" %}</option>
+                        <option value="associate_professor" {% if request.POST.title == 'associate_professor' or form.instance.title == 'associate_professor' %}selected{% endif %}>{% trans "Associate Professor" %}</option>
+                        <option value="professor" {% if request.POST.title == 'professor' or form.instance.title == 'professor' %}selected{% endif %}>{% trans "Professor" %}</option>
+                        <option value="senior_professor" {% if request.POST.title == 'senior_professor' or form.instance.title == 'senior_professor' %}selected{% endif %}>{% trans "Senior Professor" %}</option>
+                        <option value="instructor" {% if request.POST.title == 'instructor' or form.instance.title == 'instructor' %}selected{% endif %}>{% trans "Instructor" %}</option>
+                        <option value="adjunct" {% if request.POST.title == 'adjunct' or form.instance.title == 'adjunct' %}selected{% endif %}>{% trans "Adjunct Professor" %}</option>
+                        <option value="visiting" {% if request.POST.title == 'visiting' or form.instance.title == 'visiting' %}selected{% endif %}>{% trans "Visiting Professor" %}</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Join Date" %}</label>
+                    <input type="date" name="join_date" class="form-control" value="{{ request.POST.join_date|default:form.instance.join_date|default:'' }}" required>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Specialization" %}</label>
+                    <input type="text" name="specialization" class="form-control" value="{{ request.POST.specialization|default:form.instance.specialization|default:'' }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Office Location" %}</label>
+                    <input type="text" name="office_location" class="form-control" value="{{ request.POST.office_location|default:form.instance.office_location|default:'' }}" placeholder="{% trans 'e.g., Building A, Room 101' %}">
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Office Hours" %}</label>
+                    <textarea name="office_hours" class="form-control" rows="2" placeholder="{% trans 'e.g., Mon-Wed 9:00-12:00' %}">{{ request.POST.office_hours|default:form.instance.office_hours|default:'' }}</textarea>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Status" %}</label>
+                    <select name="status" class="form-select">
+                        <option value="active" {% if request.POST.status == 'active' or form.instance.status == 'active' %}selected{% endif %}>{% trans "Active" %}</option>
+                        <option value="on_leave" {% if request.POST.status == 'on_leave' or form.instance.status == 'on_leave' %}selected{% endif %}>{% trans "On Leave" %}</option>
+                        <option value="retired" {% if request.POST.status == 'retired' or form.instance.status == 'retired' %}selected{% endif %}>{% trans "Retired" %}</option>
+                        <option value="resigned" {% if request.POST.status == 'resigned' or form.instance.status == 'resigned' %}selected{% endif %}>{% trans "Resigned" %}</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-12">
+                    <label class="form-label">{% trans "Bio" %}</label>
+                    <textarea name="bio" class="form-control" rows="4" placeholder="{% trans 'Enter teacher biography...' %}">{{ request.POST.bio|default:form.instance.bio|default:'' }}</textarea>
+                </div>
+            </div>
+            
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                <strong>{% trans "Please correct the errors below:" %}</strong>
+                <ul class="mb-0">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ field }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg me-1"></i>{% trans "Save Teacher" %}
+                </button>
+                <a href="{% url 'admin_portal:admin_teachers' %}" class="btn btn-outline-secondary">
+                    {% trans "Cancel" %}
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

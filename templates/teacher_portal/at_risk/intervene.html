@@ -1,0 +1,111 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Student Intervention" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_dashboard' %}">{% trans "Teacher Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_at_risk' %}">{% trans "At-Risk Students" %}</a></li>
+<li class="breadcrumb-item active">{{ student.user.get_full_name }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Record Intervention" %}</h2>
+</div>
+
+<div class="row">
+    <div class="col-lg-4">
+        <!-- Student Info Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-person me-2"></i>{% trans "Student Information" %}</h5>
+            </div>
+            <div class="card-body text-center">
+                {% if student.user.avatar %}
+                <img src="{{ student.user.avatar.url }}" class="rounded-circle mb-3" width="100" height="100">
+                {% else %}
+                <div class="rounded-circle bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 100px; height: 100px;">
+                    <i class="bi bi-person display-4 text-secondary"></i>
+                </div>
+                {% endif %}
+                <h5>{{ student.user.get_full_name }}</h5>
+                <p class="text-muted mb-1">{{ student.student_no }}</p>
+                <p class="text-muted mb-1">{{ student.department.get_name }}</p>
+                <p class="text-muted">{{ student.program.get_name }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-8">
+        <!-- Intervention Form -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-heart-pulse me-2"></i>{% trans "Intervention Details" %}</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{% url 'teacher_portal:teacher_intervention' student.pk %}">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">{% trans "Intervention Type" %}</label>
+                            <select name="intervention_type" class="form-select" required>
+                                <option value="">{% trans "Select type..." %}</option>
+                                <option value="academic">{% trans "Academic Support" %}</option>
+                                <option value="counseling">{% trans "Counseling Referral" %}</option>
+                                <option value="attendance">{% trans "Attendance Meeting" %}</option>
+                                <option value="behavioral">{% trans "Behavioral Intervention" %}</option>
+                                <option value="financial">{% trans "Financial Aid Referral" %}</option>
+                                <option value="other">{% trans "Other" %}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">{% trans "Date of Intervention" %}</label>
+                            <input type="date" name="intervention_date" class="form-control" required value="{% now 'Y-m-d' %}">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Description of Intervention" %}</label>
+                        <textarea name="description" class="form-control" rows="4" required 
+                                  placeholder="{% trans 'Describe the intervention action taken, discussion points, and any concerns raised...' %}"></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Follow-up Required" %}</label>
+                        <textarea name="follow_up" class="form-control" rows="2"
+                                  placeholder="{% trans 'Any follow-up actions or next steps...' %}"></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Outcome/Severity Level" %}</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="severity" id="severity-green" value="green" autocomplete="off">
+                            <label class="btn btn-outline-success" for="severity-green">{% trans "Resolved" %}</label>
+                            
+                            <input type="radio" class="btn-check" name="severity" id="severity-yellow" value="yellow" autocomplete="off" checked>
+                            <label class="btn btn-outline-warning" for="severity-yellow">{% trans "Monitoring" %}</label>
+                            
+                            <input type="radio" class="btn-check" name="severity" id="severity-orange" value="orange" autocomplete="off">
+                            <label class="btn btn-outline-orange" for="severity-orange">{% trans "Concern" %}</label>
+                            
+                            <input type="radio" class="btn-check" name="severity" id="severity-red" value="red" autocomplete="off">
+                            <label class="btn btn-outline-danger" for="severity-red">{% trans "Critical" %}</label>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'teacher_portal:teacher_at_risk' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-1"></i>{% trans "Cancel" %}
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i>{% trans "Save Intervention" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

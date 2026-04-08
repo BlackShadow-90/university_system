@@ -1,0 +1,367 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Grade Policies" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:settings' %}">{% trans "Settings" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Grade Policies" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Grade Policies Management" %}</h2>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#policyModal">
+        <i class="bi bi-plus-circle me-1"></i>{% trans "Add New Policy" %}
+    </button>
+</div>
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+{% endif %}
+
+<!-- Current Policies -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">{% trans "Current Grade Policies" %}</h5>
+            </div>
+            <div class="card-body">
+                {% if policies %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>{% trans "Policy Name" %}</th>
+                                <th>{% trans "Max GPA" %}</th>
+                                <th>{% trans "Passing Grade" %}</th>
+                                <th>{% trans "GPA Warning" %}</th>
+                                <th>{% trans "Attendance Warning" %}</th>
+                                <th>{% trans "Status" %}</th>
+                                <th>{% trans "Actions" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for policy in policies %}
+                            <tr>
+                                <td>
+                                    <strong>{{ policy.name }}</strong>
+                                    {% if policy.description %}
+                                    <br><small class="text-muted">{{ policy.description|truncatechars:50 }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>{{ policy.max_gpa }}</td>
+                                <td>{{ policy.passing_grade_point }}</td>
+                                <td>{{ policy.gpa_warning_threshold }}</td>
+                                <td>{{ policy.attendance_warning_threshold }}%</td>
+                                <td>
+                                    {% if policy.is_default %}
+                                    <span class="badge bg-success">{% trans "Default" %}</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{% trans "Active" %}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" 
+                                            data-policy-id="{{ policy.pk }}"
+                                            onclick="editPolicy(this.dataset.policyId)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    {% if not policy.is_default %}
+                                    <button type="button" class="btn btn-sm btn-outline-danger" 
+                                            data-policy-id="{{ policy.pk }}"
+                                            onclick="deletePolicy(this.dataset.policyId)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="bi bi-clipboard-data text-muted" style="font-size: 3rem;"></i>
+                    <p class="text-muted mt-2">{% trans "No grade policies configured yet." %}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Policy Details Card -->
+{% if default_policy %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">{% trans "Default Policy Details" %}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>{% trans "GPA Settings" %}</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>{% trans "Maximum GPA:" %}</strong> {{ default_policy.max_gpa }}</li>
+                            <li><strong>{% trans "Minimum Passing Grade Point:" %}</strong> {{ default_policy.passing_grade_point }}</li>
+                            <li><strong>{% trans "GPA Warning Threshold:" %}</strong> {{ default_policy.gpa_warning_threshold }}</li>
+                            <li><strong>{% trans "CGPA Warning Threshold:" %}</strong> {{ default_policy.cgpa_warning_threshold }}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>{% trans "Warning Thresholds" %}</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>{% trans "Attendance Warning Threshold:" %}</strong> {{ default_policy.attendance_warning_threshold }}%</li>
+                            <li><strong>{% trans "GPA Drop Warning Threshold:" %}</strong> {{ default_policy.gpa_drop_warning_threshold }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Add/Edit Policy Modal -->
+<div class="modal fade" id="policyModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="post" id="policyForm">
+                {% csrf_token %}
+                <input type="hidden" name="policy_id" id="policyId">
+                <input type="hidden" name="action" id="formAction" value="create">
+                
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">{% trans "Add Grade Policy" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">{% trans "Policy Name" %} *</label>
+                                <input type="text" class="form-control {% if form.name.errors %}is-invalid{% endif %}" 
+                                       id="name" name="name" value="{% if form.name.value %}{{ form.name.value }}{% endif %}" required>
+                                {% if form.name.errors %}
+                                    {% for error in form.name.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="max_gpa" class="form-label">{% trans "Maximum GPA" %} *</label>
+                                <input type="number" step="0.01" class="form-control {% if form.max_gpa.errors %}is-invalid{% endif %}" 
+                                       id="max_gpa" name="max_gpa" value="{% if form.max_gpa.value %}{{ form.max_gpa.value }}{% else %}4.00{% endif %}" required>
+                                {% if form.max_gpa.errors %}
+                                    {% for error in form.max_gpa.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="passing_grade_point" class="form-label">{% trans "Minimum Passing Grade Point" %} *</label>
+                                <input type="number" step="0.01" class="form-control {% if form.passing_grade_point.errors %}is-invalid{% endif %}" 
+                                       id="passing_grade_point" name="passing_grade_point" value="{% if form.passing_grade_point.value %}{{ form.passing_grade_point.value }}{% else %}1.00{% endif %}" required>
+                                {% if form.passing_grade_point.errors %}
+                                    {% for error in form.passing_grade_point.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="gpa_warning_threshold" class="form-label">{% trans "GPA Warning Threshold" %} *</label>
+                                <input type="number" step="0.01" class="form-control {% if form.gpa_warning_threshold.errors %}is-invalid{% endif %}" 
+                                       id="gpa_warning_threshold" name="gpa_warning_threshold" value="{% if form.gpa_warning_threshold.value %}{{ form.gpa_warning_threshold.value }}{% else %}2.00{% endif %}" required>
+                                {% if form.gpa_warning_threshold.errors %}
+                                    {% for error in form.gpa_warning_threshold.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="cgpa_warning_threshold" class="form-label">{% trans "CGPA Warning Threshold" %} *</label>
+                                <input type="number" step="0.01" class="form-control {% if form.cgpa_warning_threshold.errors %}is-invalid{% endif %}" 
+                                       id="cgpa_warning_threshold" name="cgpa_warning_threshold" value="{% if form.cgpa_warning_threshold.value %}{{ form.cgpa_warning_threshold.value }}{% else %}2.00{% endif %}" required>
+                                {% if form.cgpa_warning_threshold.errors %}
+                                    {% for error in form.cgpa_warning_threshold.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="attendance_warning_threshold" class="form-label">{% trans "Attendance Warning Threshold (%)" %} *</label>
+                                <input type="number" step="0.01" class="form-control {% if form.attendance_warning_threshold.errors %}is-invalid{% endif %}" 
+                                       id="attendance_warning_threshold" name="attendance_warning_threshold" value="{% if form.attendance_warning_threshold.value %}{{ form.attendance_warning_threshold.value }}{% else %}75.00{% endif %}" required>
+                                {% if form.attendance_warning_threshold.errors %}
+                                    {% for error in form.attendance_warning_threshold.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="gpa_drop_warning_threshold" class="form-label">{% trans "GPA Drop Warning Threshold" %} *</label>
+                                <input type="number" step="0.01" class="form-control {% if form.gpa_drop_warning_threshold.errors %}is-invalid{% endif %}" 
+                                       id="gpa_drop_warning_threshold" name="gpa_drop_warning_threshold" value="{% if form.gpa_drop_warning_threshold.value %}{{ form.gpa_drop_warning_threshold.value }}{% else %}0.80{% endif %}" required>
+                                {% if form.gpa_drop_warning_threshold.errors %}
+                                    {% for error in form.gpa_drop_warning_threshold.errors %}
+                                        <div class="invalid-feedback">{{ error }}</div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <div class="form-check mt-4">
+                                    <input class="form-check-input" type="checkbox" id="is_default" name="is_default" 
+                                           {% if form.is_default.value %}checked{% endif %}>
+                                    <label class="form-check-label" for="is_default">
+                                        {% trans "Set as Default Policy" %}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">{% trans "Description" %}</label>
+                        <textarea class="form-control {% if form.description.errors %}is-invalid{% endif %}" 
+                                  id="description" name="description" rows="3">{% if form.description.value %}{{ form.description.value }}{% endif %}</textarea>
+                        {% if form.description.errors %}
+                            {% for error in form.description.errors %}
+                                <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                            <div class="alert alert-danger">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-primary">{% trans "Save Policy" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script id="policy-data" type="application/json">
+{{ policies_json|safe }}
+</script>
+<script id="form-config" type="application/json">
+{
+    "hasForm": {% if form %}true{% else %}false{% endif %},
+    "formAction": "{% if form_action == 'update' %}update{% else %}create{% endif %}",
+    "editingPolicyId": "{% if editing_policy_id %}{{ editing_policy_id }}{% endif %}"
+}
+</script>
+<script>
+// Parse policy data for editing
+const policyData = JSON.parse(document.getElementById('policy-data').textContent);
+const formConfig = JSON.parse(document.getElementById('form-config').textContent);
+
+// Auto-open modal if there's a form with errors
+document.addEventListener('DOMContentLoaded', function() {
+    if (formConfig.hasForm) {
+        // There's a form with errors, open the modal
+        const modal = new bootstrap.Modal(document.getElementById('policyModal'));
+        modal.show();
+        
+        // Update modal title and form data
+        if (formConfig.formAction === 'update') {
+            document.getElementById('modalTitle').textContent = '{% trans "Edit Grade Policy" %}';
+            document.getElementById('policyId').value = formConfig.editingPolicyId;
+            document.getElementById('formAction').value = 'update';
+        }
+    }
+});
+
+function editPolicy(policyId) {
+    const policy = policyData.find(p => p.pk === policyId);
+    if (!policy) return;
+    
+    document.getElementById('modalTitle').textContent = '{% trans "Edit Grade Policy" %}';
+    document.getElementById('policyId').value = policy.pk;
+    document.getElementById('formAction').value = 'update';
+    document.getElementById('name').value = policy.fields.name;
+    document.getElementById('max_gpa').value = policy.fields.max_gpa;
+    document.getElementById('passing_grade_point').value = policy.fields.passing_grade_point;
+    document.getElementById('gpa_warning_threshold').value = policy.fields.gpa_warning_threshold;
+    document.getElementById('cgpa_warning_threshold').value = policy.fields.cgpa_warning_threshold;
+    document.getElementById('attendance_warning_threshold').value = policy.fields.attendance_warning_threshold;
+    document.getElementById('gpa_drop_warning_threshold').value = policy.fields.gpa_drop_warning_threshold;
+    document.getElementById('description').value = policy.fields.description;
+    document.getElementById('is_default').checked = policy.fields.is_default;
+    
+    new bootstrap.Modal(document.getElementById('policyModal')).show();
+}
+
+function deletePolicy(policyId) {
+    if (!confirm('{% trans "Are you sure you want to delete this grade policy?" %}')) {
+        return;
+    }
+    
+    const form = document.createElement('form');
+    form.method = 'post';
+    form.innerHTML = `
+        {% csrf_token %}
+        <input type="hidden" name="policy_id" value="${policyId}">
+        <input type="hidden" name="action" value="delete">
+    `;
+    document.body.appendChild(form);
+    form.submit();
+}
+
+// Reset form when modal is hidden
+document.getElementById('policyModal').addEventListener('hidden.bs.modal', function () {
+    document.getElementById('policyForm').reset();
+    document.getElementById('modalTitle').textContent = '{% trans "Add Grade Policy" %}';
+    document.getElementById('policyId').value = '';
+    document.getElementById('formAction').value = 'create';
+    
+    // Clear any validation errors
+    const invalidFields = document.querySelectorAll('.is-invalid');
+    invalidFields.forEach(field => field.classList.remove('is-invalid'));
+    
+    const errorMessages = document.querySelectorAll('.invalid-feedback');
+    errorMessages.forEach(msg => msg.remove());
+});
+</script>
+{% endblock %}

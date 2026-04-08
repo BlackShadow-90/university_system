@@ -1,0 +1,32 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "About" %} - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="mb-4">{% trans "About the System" %}</h1>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{% trans "University Academic Performance Management & Early Warning System" %}</h5>
+                    <p class="card-text">
+                        {% trans "This comprehensive system provides a complete solution for managing academic records, tracking student performance, and implementing early intervention strategies to ensure student success." %}
+                    </p>
+                    <p class="card-text">
+                        {% trans "The system supports three distinct user roles: Administrators who manage the entire system, Teachers who handle course-related activities, and Students who track their academic progress." %}
+                    </p>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <a href="{% url 'landing' %}" class="btn btn-primary">
+                    <i class="bi bi-arrow-left me-2"></i>{% trans "Back to Home" %}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

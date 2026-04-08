@@ -1,0 +1,77 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Submit Grades" %} - {{ offering.course.code }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_dashboard' %}">{% trans "Teacher Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_courses' %}">{% trans "My Courses" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_course_detail' offering.pk %}">{{ offering.course.code }}</a></li>
+<li class="breadcrumb-item active">{% trans "Submit Grades" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ offering.course.code }} - {% trans "Submit Final Grades" %}</h2>
+</div>
+
+<form method="post" action="{% url 'teacher_portal:teacher_grade_submit' offering.pk %}">
+    {% csrf_token %}
+    
+    <div class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <strong>{% trans "Important:" %}</strong> {% trans "Once submitted, grades will be sent for approval. Please verify all marks are correctly entered before submitting." %}
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-check-circle me-2"></i>{% trans "Grade Submission Checklist" %}</h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-clipboard-check me-2"></i>{% trans "All assessment components have marks entered" %}</span>
+                    <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-calendar-check me-2"></i>{% trans "Attendance records are complete" %}</span>
+                    <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-calculator me-2"></i>{% trans "Final grades calculated" %}</span>
+                    <span class="badge bg-success rounded-pill"><i class="bi bi-check"></i></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="bi bi-chat-left-text me-2"></i>{% trans "Submission Notes" %}</h5>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label">{% trans "Comments for Administrator (Optional)" %}</label>
+                <textarea name="submission_notes" class="form-control" rows="3" placeholder="{% trans 'Any special notes about the grading process...' %}"></textarea>
+            </div>
+            
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" name="confirm" id="confirmCheck" required>
+                <label class="form-check-label" for="confirmCheck">
+                    {% trans "I confirm that all grades have been entered correctly and I am ready to submit them for approval." %}
+                </label>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'teacher_portal:teacher_course_detail' offering.pk %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>{% trans "Cancel" %}
+                </a>
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-send me-1"></i>{% trans "Submit Grades" %}
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Reports" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Reports" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Report Center" %}</h2>
+</div>
+
+<div class="row g-4">
+    <!-- Academic Reports -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-file-earmark-text me-2"></i>{% trans "Academic Reports" %}</h5>
+                <p class="card-text text-muted">{% trans "Generate transcripts, semester reports, and grade reports." %}</p>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'admin_portal:admin_students' %}" class="btn btn-outline-primary">
+                        <i class="bi bi-file-earmark-pdf me-1"></i>{% trans "Student Transcripts" %}
+                    </a>
+                    <a href="/admin-portal/" class="btn btn-outline-primary">
+                        <i class="bi bi-calendar me-1"></i>{% trans "Semester Reports" %}
+                    </a>
+                    <a href="#" class="btn btn-outline-primary">
+                        <i class="bi bi-book me-1"></i>{% trans "Course Reports" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Analytics -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-graph-up me-2"></i>{% trans "Performance Analytics" %}</h5>
+                <p class="card-text text-muted">{% trans "View GPA trends, pass/fail rates, and warning statistics." %}</p>
+                <div class="d-grid gap-2">
+                    <a href="#" class="btn btn-outline-primary">
+                        <i class="bi bi-graph-up-arrow me-1"></i>{% trans "GPA Analytics" %}
+                    </a>
+                    <a href="#" class="btn btn-outline-primary">
+                        <i class="bi bi-exclamation-triangle me-1"></i>{% trans "Warning Reports" %}
+                    </a>
+                    <a href="#" class="btn btn-outline-primary">
+                        <i class="bi bi-calendar-check me-1"></i>{% trans "Attendance Reports" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Export -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-download me-2"></i>{% trans "Data Export" %}</h5>
+                <p class="card-text text-muted">{% trans "Export data to CSV or Excel format for external analysis." %}</p>
+                <div class="d-grid gap-2">
+                    <a href="#" class="btn btn-outline-success">
+                        <i class="bi bi-people me-1"></i>{% trans "Export Students" %}
+                    </a>
+                    <a href="#" class="btn btn-outline-success">
+                        <i class="bi bi-award me-1"></i>{% trans "Export Grades" %}
+                    </a>
+                    <a href="#" class="btn btn-outline-success">
+                        <i class="bi bi-journal-text me-1"></i>{% trans "Export Enrollments" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info mt-4">
+    <i class="bi bi-info-circle me-2"></i>
+    {% trans "More advanced reporting features coming soon!" %}
+</div>
+{% endblock %}

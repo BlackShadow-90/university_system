@@ -1,0 +1,124 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Audit Logs" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Audit Logs" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Audit Log" %}</h2>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <input type="text" name="user" class="form-control" placeholder="{% trans 'Search by user...' %}" value="{{ request.GET.user }}">
+            </div>
+            <div class="col-md-3">
+                <select name="action" class="form-select">
+                    <option value="">{% trans "All Actions" %}</option>
+                    <option value="create" {% if request.GET.action == 'create' %}selected{% endif %}>{% trans "Create" %}</option>
+                    <option value="update" {% if request.GET.action == 'update' %}selected{% endif %}>{% trans "Update" %}</option>
+                    <option value="delete" {% if request.GET.action == 'delete' %}selected{% endif %}>{% trans "Delete" %}</option>
+                    <option value="login" {% if request.GET.action == 'login' %}selected{% endif %}>{% trans "Login" %}</option>
+                    <option value="logout" {% if request.GET.action == 'logout' %}selected{% endif %}>{% trans "Logout" %}</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="bi bi-funnel me-1"></i>{% trans "Filter" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Logs Table -->
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>{% trans "Timestamp" %}</th>
+                    <th>{% trans "User" %}</th>
+                    <th>{% trans "Role" %}</th>
+                    <th>{% trans "Action" %}</th>
+                    <th>{% trans "Model" %}</th>
+                    <th>{% trans "Description" %}</th>
+                    <th>{% trans "IP Address" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.created_at|date:"Y-m-d H:i:s" }}</td>
+                    <td>
+                        {% if log.user %}
+                        {{ log.user.get_full_name }}
+                        {% else %}
+                        <span class="text-muted">{% trans "System" %}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if log.user %}
+                            {% if log.user.is_admin %}
+                                <span class="badge bg-danger">{% trans "Admin" %}</span>
+                            {% elif log.user.is_teacher %}
+                                <span class="badge bg-primary">{% trans "Teacher" %}</span>
+                            {% elif log.user.is_student %}
+                                <span class="badge bg-success">{% trans "Student" %}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ log.user.role.name }}</span>
+                            {% endif %}
+                        {% else %}
+                            <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge bg-{% if log.action == 'create' %}success{% elif log.action == 'update' %}primary{% elif log.action == 'delete' %}danger{% elif log.action == 'login' %}info{% else %}secondary{% endif %}">
+                            {{ log.get_action_display }}
+                        </span>
+                    </td>
+                    <td>{{ log.entity_type }}</td>
+                    <td>{{ log.description|truncatechars:100 }}</td>
+                    <td><code class="small">{{ log.ip_address }}</code></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">
+                        <i class="bi bi-clock-history display-4"></i>
+                        <p class="mt-2">{% trans "No audit logs found" %}</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if is_paginated %}
+<nav aria-label="{% trans 'Page navigation' %}" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.user %}&user={{ request.GET.user }}{% endif %}{% if request.GET.action %}&action={{ request.GET.action }}{% endif %}">{% trans "Previous" %}</a>
+        </li>
+        {% endif %}
+        <li class="page-item disabled">
+            <span class="page-link">{% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}</span>
+        </li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.user %}&user={{ request.GET.user }}{% endif %}{% if request.GET.action %}&action={{ request.GET.action }}{% endif %}">{% trans "Next" %}</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

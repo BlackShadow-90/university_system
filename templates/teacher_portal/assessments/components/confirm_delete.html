@@ -1,0 +1,60 @@
+{% extends 'teacher_portal/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Delete Assessment Component' %} - {{ offering.course.code }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_courses' %}">{% trans 'Courses' %}</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_course_detail' offering.pk %}">{{ offering.course.code }}</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_assessment_components' offering.pk %}">{% trans 'Assessment Components' %}</a></li>
+                    <li class="breadcrumb-item active">{% trans 'Delete' %}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> {% trans 'Confirm Deletion' %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="lead">
+                        {% trans 'Are you sure you want to delete the assessment component:' %}
+                    </p>
+                    <h4 class="text-danger mb-4">"{{ object.name }}"</h4>
+
+                    <div class="alert alert-warning">
+                        <h6 class="alert-heading">{% trans 'Warning!' %}</h6>
+                        <ul class="mb-0">
+                            <li>{% trans 'This action cannot be undone.' %}</li>
+                            <li>{% trans 'All student marks for this component will be permanently deleted.' %}</li>
+                            <li>{% trans 'Final grades may need to be recalculated.' %}</li>
+                        </ul>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'teacher_portal:teacher_assessment_components' offering.pk %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> {% trans 'Cancel' %}
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> {% trans 'Delete Permanently' %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

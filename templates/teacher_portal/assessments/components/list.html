@@ -1,0 +1,119 @@
+{% extends 'teacher_portal/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Assessment Components' %} - {{ offering.course.code }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_courses' %}">{% trans 'Courses' %}</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_course_detail' offering.pk %}">{{ offering.course.code }}</a></li>
+                    <li class="breadcrumb-item active">{% trans 'Assessment Components' %}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="h3 mb-2">{% trans 'Assessment Components' %}</h1>
+            <p class="text-muted">{{ offering.course.title }} - {{ offering.semester }}</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'teacher_portal:teacher_assessment_component_create' offering.pk %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> {% trans 'Add Component' %}
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">{% trans 'Component List' %}</h5>
+                </div>
+                <div class="card-body">
+                    {% if components %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>{% trans 'Name' %}</th>
+                                        <th>{% trans 'Type' %}</th>
+                                        <th>{% trans 'Weight' %}</th>
+                                        <th>{% trans 'Max Score' %}</th>
+                                        <th>{% trans 'Due Date' %}</th>
+                                        <th>{% trans 'Actions' %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for component in components %}
+                                    <tr>
+                                        <td>
+                                            <strong>{{ component.name }}</strong>
+                                            {% if component.description %}
+                                                <br><small class="text-muted">{{ component.description|truncatewords:20 }}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">{{ component.get_component_type_display }}</span>
+                                        </td>
+                                        <td>{{ component.weight_percentage }}%</td>
+                                        <td>{{ component.max_score }}</td>
+                                        <td>
+                                            {% if component.due_date %}
+                                                {{ component.due_date|date:"Y-m-d" }}
+                                            {% else %}
+                                                <span class="text-muted">-</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'teacher_portal:teacher_assessment_component_edit' offering.pk component.pk %}" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'teacher_portal:teacher_assessment_component_delete' offering.pk component.pk %}" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Total Weight Summary -->
+                        {% with total_weight=components|sum_weights %}
+                        <div class="alert {% if total_weight == 100 %}alert-success{% else %}alert-warning{% endif %} mt-3">
+                            <strong>{% trans 'Total Weight:' %}</strong> {{ total_weight }}%
+                            {% if total_weight != 100 %}
+                                <br><small>{% trans 'Total weight should equal 100%' %}</small>
+                            {% endif %}
+                        </div>
+                        {% endwith %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">{% trans 'No Assessment Components' %}</h5>
+                            <p class="text-muted">{% trans 'Create assessment components to define how student grades will be calculated.' %}</p>
+                            <a href="{% url 'teacher_portal:teacher_assessment_component_create' offering.pk %}" class="btn btn-primary">
+                                {% trans 'Add First Component' %}
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <a href="{% url 'teacher_portal:teacher_course_detail' offering.pk %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> {% trans 'Back to Course' %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,208 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% if form.instance.pk %}{% trans "Edit Student" %}{% else %}{% trans "Add Student" %}{% endif %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_students' %}">{% trans "Students" %}</a></li>
+<li class="breadcrumb-item active">{% if form.instance.pk %}{% trans "Edit" %}{% else %}{% trans "Add" %}{% endif %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% if form.instance.pk %}{% trans "Edit Student" %}{% else %}{% trans "Add New Student" %}{% endif %}</h2>
+    <a href="{% url 'admin_portal:admin_students' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>{% trans "Back" %}
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <h5 class="mb-3">{% trans "Account Information" %}</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Email" %}</label>
+                    <input type="email" name="email" class="form-control" value="{{ request.POST.email|default:form.instance.user.email|default:'' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Full Name (English)" %}</label>
+                    <input type="text" name="full_name_en" class="form-control" value="{{ request.POST.full_name_en|default:form.instance.user.full_name_en|default:'' }}" required>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Full Name (Chinese)" %}</label>
+                    <input type="text" name="full_name_zh" class="form-control" value="{{ request.POST.full_name_zh|default:form.instance.user.full_name_zh|default:'' }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Phone Number" %}</label>
+                    <input type="tel" name="phone" class="form-control" value="{{ request.POST.phone|default:form.instance.user.phone|default:'' }}">
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <h5 class="mb-3">{% trans "Academic Information" %}</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Student Number" %}</label>
+                    <input type="text" name="student_no" class="form-control" value="{{ request.POST.student_no|default:form.instance.student_no|default:'' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Department" %}</label>
+                    <select name="department" class="form-select" required>
+                        <option value="">{% trans "Select Department" %}</option>
+                        {% for dept in departments %}
+                        <option value="{{ dept.pk }}" {% if request.POST.department == dept.pk|stringformat:"s" or form.instance.department_id == dept.pk %}selected{% endif %}>{{ dept.name_en }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Program" %}</label>
+                    <select name="program" class="form-select" required>
+                        <option value="">{% trans "Select Program" %}</option>
+                        {% for prog in programs %}
+                        <option value="{{ prog.pk }}" {% if request.POST.program == prog.pk|stringformat:"s" or form.instance.program_id == prog.pk %}selected{% endif %}>{{ prog.name_en }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Batch Year" %}</label>
+                    <input type="text" name="batch_year" class="form-control" value="{{ request.POST.batch_year|default:form.instance.batch_year|default:'2024' }}" placeholder="2024" required>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Current Semester" %}</label>
+                    <select name="current_semester" class="form-select">
+                        <option value="">{% trans "Select Semester" %}</option>
+                        {% for sem in semesters %}
+                        <option value="{{ sem.pk }}" {% if request.POST.current_semester == sem.pk|stringformat:"s" or form.instance.current_semester_id == sem.pk %}selected{% endif %}>{{ sem.name_en }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Status" %}</label>
+                    <select name="status" class="form-select">
+                        <option value="active" {% if request.POST.status == 'active' or form.instance.status == 'active' %}selected{% endif %}>{% trans "Active" %}</option>
+                        <option value="suspended" {% if request.POST.status == 'suspended' or form.instance.status == 'suspended' %}selected{% endif %}>{% trans "Suspended" %}</option>
+                        <option value="graduated" {% if request.POST.status == 'graduated' or form.instance.status == 'graduated' %}selected{% endif %}>{% trans "Graduated" %}</option>
+                        <option value="withdrawn" {% if request.POST.status == 'withdrawn' or form.instance.status == 'withdrawn' %}selected{% endif %}>{% trans "Withdrawn" %}</option>
+                        <option value="transferred" {% if request.POST.status == 'transferred' or form.instance.status == 'transferred' %}selected{% endif %}>{% trans "Transferred" %}</option>
+                        <option value="dropped_out" {% if request.POST.status == 'dropped_out' or form.instance.status == 'dropped_out' %}selected{% endif %}>{% trans "Dropped Out" %}</option>
+                    </select>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <h5 class="mb-3">{% trans "Personal Information" %}</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Nationality" %}</label>
+                    <input type="text" name="nationality" class="form-control" value="{{ request.POST.nationality|default:form.instance.nationality|default:'' }}" placeholder="{% trans 'e.g., China' %}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "ID/Passport Number" %}</label>
+                    <input type="text" name="id_number" class="form-control" value="{{ request.POST.id_number|default:form.instance.id_number|default:'' }}">
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Gender" %}</label>
+                    <select name="gender" class="form-select">
+                        <option value="">{% trans "Select Gender" %}</option>
+                        <option value="male" {% if request.POST.gender == 'male' or form.instance.gender == 'male' %}selected{% endif %}>{% trans "Male" %}</option>
+                        <option value="female" {% if request.POST.gender == 'female' or form.instance.gender == 'female' %}selected{% endif %}>{% trans "Female" %}</option>
+                        <option value="other" {% if request.POST.gender == 'other' or form.instance.gender == 'other' %}selected{% endif %}>{% trans "Other" %}</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Date of Birth" %}</label>
+                    <input type="date" name="date_of_birth" class="form-control" value="{{ request.POST.date_of_birth|default:form.instance.date_of_birth|default:'' }}">
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Guardian Name" %}</label>
+                    <input type="text" name="guardian_name" class="form-control" value="{{ request.POST.guardian_name|default:form.instance.guardian_name|default:'' }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Guardian Phone" %}</label>
+                    <input type="tel" name="guardian_phone" class="form-control" value="{{ request.POST.guardian_phone|default:form.instance.guardian_phone|default:'' }}">
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Guardian Email" %}</label>
+                    <input type="email" name="guardian_email" class="form-control" value="{{ request.POST.guardian_email|default:form.instance.guardian_email|default:'' }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Relationship to Guardian" %}</label>
+                    <input type="text" name="guardian_relationship" class="form-control" value="{{ request.POST.guardian_relationship|default:form.instance.guardian_relationship|default:'' }}" placeholder="{% trans 'e.g., Father, Mother' %}">
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <h5 class="mb-3">{% trans "Enrollment Information" %}</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Academic Advisor" %}</label>
+                    <select name="advisor" class="form-select">
+                        <option value="">{% trans "Select Advisor" %}</option>
+                        {% for teacher in teachers %}
+                        <option value="{{ teacher.pk }}" {% if request.POST.advisor == teacher.pk|stringformat:"s" or form.instance.advisor_id == teacher.pk %}selected{% endif %}>{{ teacher.user.get_full_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Admission Date" %}</label>
+                    <input type="date" name="admission_date" class="form-control" value="{{ request.POST.admission_date|default:form.instance.admission_date|default:'' }}">
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">{% trans "Expected Graduation Date" %}</label>
+                    <input type="date" name="expected_graduation" class="form-control" value="{{ request.POST.expected_graduation|default:form.instance.expected_graduation|default:'' }}">
+                </div>
+            </div>
+            
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                <strong>{% trans "Please correct the errors below:" %}</strong>
+                <ul class="mb-0">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ field }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-check-lg me-1"></i>{% trans "Save Student" %}
+                </button>
+                <a href="{% url 'admin_portal:admin_students' %}" class="btn btn-outline-secondary">
+                    {% trans "Cancel" %}
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

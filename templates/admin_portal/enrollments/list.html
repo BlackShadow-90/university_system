@@ -1,0 +1,135 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Enrollments" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Enrollments" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Enrollment Management" %}</h2>
+    <a href="{% url 'admin_portal:admin_bulk_enrollment' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>{% trans "Bulk Enrollment" %}
+    </a>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <select name="status" class="form-select">
+                    <option value="">{% trans "All Status" %}</option>
+                    <option value="enrolled" {% if request.GET.status == 'enrolled' %}selected{% endif %}>{% trans "Enrolled" %}</option>
+                    <option value="dropped" {% if request.GET.status == 'dropped' %}selected{% endif %}>{% trans "Dropped" %}</option>
+                    <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>{% trans "Completed" %}</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="bi bi-funnel me-1"></i>{% trans "Filter" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Enrollments Table -->
+<div class="card">
+    <div class="card-body">
+        {% if grouped_enrollments %}
+            {% for semester_group in grouped_enrollments %}
+            <div class="mb-5">
+                <div class="d-flex align-items-center mb-3">
+                    <h4 class="mb-0 me-3">
+                        <i class="bi bi-calendar3 me-2"></i>{{ semester_group.semester }}
+                    </h4>
+                    <span class="badge bg-info">
+                        {% trans "Courses:" %} {{ semester_group.courses|length }}
+                    </span>
+                </div>
+                
+                {% for course_group in semester_group.courses %}
+                <div class="mb-4">
+                    <div class="d-flex align-items-center mb-2">
+                        <h5 class="mb-0 me-2">
+                            {{ course_group.course.code }} - {{ course_group.course.title_en }}
+                        </h5>
+                        <span class="badge bg-secondary">
+                            {{ course_group.enrollments|length }} {% trans "students" %}
+                        </span>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>{% trans "Student" %}</th>
+                                    <th>{% trans "Status" %}</th>
+                                    <th>{% trans "Enrolled Date" %}</th>
+                                    <th>{% trans "Actions" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for enrollment in course_group.enrollments %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ enrollment.student.student_no }}</strong><br>
+                                        <small class="text-muted">{{ enrollment.student.user.get_full_name }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{% if enrollment.enroll_status == 'enrolled' %}success{% elif enrollment.enroll_status == 'dropped' %}danger{% else %}secondary{% endif %}">
+                                            {{ enrollment.get_enroll_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>{{ enrollment.enrolled_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'admin_portal:admin_enrollment_delete' enrollment.pk %}" 
+                                           class="btn btn-sm btn-outline-danger" 
+                                           title="{% trans 'Remove from course' %}">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% if not forloop.last %}<hr>{% endif %}
+                {% endfor %}
+            </div>
+            {% if not forloop.last %}<hr class="my-4">{% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                <p class="text-muted">{% trans "No enrollments found" %}</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if is_paginated %}
+<nav aria-label="{% trans 'Page navigation' %}" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">{% trans "Previous" %}</a>
+        </li>
+        {% endif %}
+        <li class="page-item disabled">
+            <span class="page-link">{% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}</span>
+        </li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}">{% trans "Next" %}</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

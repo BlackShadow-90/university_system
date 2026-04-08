@@ -1,0 +1,150 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Warning Reports" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_reports_dashboard' %}">{% trans "Reports" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Warnings" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Warning Reports" %}</h2>
+    <div>
+        <a href="{% url 'admin_portal:admin_warnings_list' %}" class="btn btn-outline-secondary me-2">
+            <i class="bi bi-arrow-left me-1"></i>{% trans "Back to Warnings" %}
+        </a>
+        <a href="?export=excel" class="btn btn-success">
+            <i class="bi bi-file-earmark-excel me-1"></i>{% trans "Export Excel" %}
+        </a>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark">
+            <div class="card-body">
+                <h6 class="card-title">{% trans "Total Warnings" %}</h6>
+                <h3>{{ total_warnings|default:"0" }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-yellow text-dark">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <h6 class="card-title">{% trans "Active" %}</h6>
+                <h3>{{ active_warnings|default:"0" }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <h6 class="card-title">{% trans "Resolved" %}</h6>
+                <h3>{{ resolved_count|default:"0" }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body">
+                <h6 class="card-title">{% trans "Critical" %}</h6>
+                <h3>{{ critical_count|default:"0" }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <select name="semester" class="form-select">
+                    <option value="">{% trans "All Semesters" %}</option>
+                    {% for semester in semesters %}
+                    <option value="{{ semester.pk }}" {% if request.GET.semester == semester.pk|stringformat:"s" %}selected{% endif %}>{{ semester.display_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="level" class="form-select">
+                    <option value="">{% trans "All Levels" %}</option>
+                    <option value="yellow" {% if request.GET.level == 'yellow' %}selected{% endif %}>{% trans "Yellow" %}</option>
+                    <option value="orange" {% if request.GET.level == 'orange' %}selected{% endif %}>{% trans "Orange" %}</option>
+                    <option value="red" {% if request.GET.level == 'red' %}selected{% endif %}>{% trans "Red" %}</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">{% trans "All Statuses" %}</option>
+                    <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>{% trans "Active" %}</option>
+                    <option value="resolved" {% if request.GET.status == 'resolved' %}selected{% endif %}>{% trans "Resolved" %}</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-funnel me-1"></i>{% trans "Filter" %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Warning List -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">{% trans "Warning Details" %}</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>{% trans "Student" %}</th>
+                        <th>{% trans "Semester" %}</th>
+                        <th>{% trans "Level" %}</th>
+                        <th>{% trans "GPA" %}</th>
+                        <th>{% trans "Attendance" %}</th>
+                        <th>{% trans "Status" %}</th>
+                        <th>{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for warning in warnings %}
+                    <tr>
+                        <td>{{ warning.student.get_full_name }}</td>
+                        <td>{{ warning.semester.display_name }}</td>
+                        <td>
+                            <span class="badge {% if warning.warning_level == 'yellow' %}bg-warning{% elif warning.warning_level == 'orange' %}bg-orange{% else %}bg-danger{% endif %}">
+                                {{ warning.get_warning_level_display }}
+                            </span>
+                        </td>
+                        <td>{{ warning.current_gpa|default:"-" }}</td>
+                        <td>{{ warning.attendance_rate|default:"-" }}%</td>
+                        <td>
+                            <span class="badge {% if warning.status == 'active' %}bg-danger{% else %}bg-success{% endif %}">
+                                {{ warning.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'admin_portal:admin_warning_detail' warning.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">{% trans "No warnings found" %}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

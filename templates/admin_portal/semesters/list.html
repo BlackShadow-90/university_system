@@ -1,0 +1,67 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Semesters" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Semesters" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Semester Management" %}</h2>
+    <a href="{% url 'admin_portal:admin_semester_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>{% trans "Add Semester" %}
+    </a>
+</div>
+
+<!-- Semesters Table -->
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>{% trans "Name" %}</th>
+                    <th>{% trans "Academic Year" %}</th>
+                    <th>{% trans "Term" %}</th>
+                    <th>{% trans "Start Date" %}</th>
+                    <th>{% trans "End Date" %}</th>
+                    <th>{% trans "Status" %}</th>
+                    <th>{% trans "Actions" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for semester in semesters %}
+                <tr>
+                    <td>{{ semester.name_en }}</td>
+                    <td>{{ semester.academic_year }}</td>
+                    <td>{{ semester.term }}</td>
+                    <td>{{ semester.start_date }}</td>
+                    <td>{{ semester.end_date }}</td>
+                    <td>
+                        {% if semester.is_active %}
+                        <span class="badge bg-success">{% trans "Active" %}</span>
+                        {% else %}
+                        <span class="badge bg-secondary">{% trans "Inactive" %}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'admin_portal:admin_semester_edit' semester.pk %}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil me-1"></i>{% trans "Edit" %}
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">
+                        <i class="bi bi-calendar3 display-4 d-block mb-3"></i>
+                        <p>{% trans "No semesters found. Create your first semester to get started." %}</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

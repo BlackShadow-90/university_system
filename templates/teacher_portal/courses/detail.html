@@ -1,0 +1,160 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Course Detail" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_dashboard' %}">{% trans "Teacher Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_courses' %}">{% trans "My Courses" %}</a></li>
+<li class="breadcrumb-item active">{{ offering.course.code }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ offering.course.code }} - {{ offering.course.get_title }}</h2>
+    <span class="badge bg-{% if offering.status == 'in_progress' %}success{% elif offering.status == 'grading' %}warning{% else %}secondary{% endif %}">
+        {{ offering.get_status_display }}
+    </span>
+</div>
+
+<div class="row g-4">
+    <!-- Course Info -->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>{% trans "Course Information" %}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td class="text-muted">{% trans "Section:" %}</td>
+                                <td>{{ offering.section_name }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">{% trans "Semester:" %}</td>
+                                <td>{{ offering.semester.name_en }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">{% trans "Schedule:" %}</td>
+                                <td>{{ offering.schedule_display }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">{% trans "Room:" %}</td>
+                                <td>{{ offering.room|default:"TBD" }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td class="text-muted">{% trans "Capacity:" %}</td>
+                                <td>{{ offering.enrolled_count }} / {{ offering.capacity }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">{% trans "Credits:" %}</td>
+                                <td>{{ offering.course.credit_hours }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">{% trans "Available Seats:" %}</td>
+                                <td>{{ offering.available_seats }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Assessment Components -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-clipboard-check me-2"></i>{% trans "Assessment Components" %}</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>{% trans "Component" %}</th>
+                                <th>{% trans "Type" %}</th>
+                                <th>{% trans "Weight" %}</th>
+                                <th>{% trans "Max Score" %}</th>
+                                <th>{% trans "Due Date" %}</th>
+                                <th>{% trans "Status" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for component in offering.assessment_components.all %}
+                            <tr>
+                                <td>{{ component.name }}</td>
+                                <td>{{ component.get_assessment_type_display }}</td>
+                                <td>{{ component.weight_percentage }}%</td>
+                                <td>{{ component.max_score }}</td>
+                                <td>{{ component.due_date|default:"-" }}</td>
+                                <td>
+                                    {% if component.is_published %}
+                                    <span class="badge bg-success">{% trans "Published" %}</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{% trans "Draft" %}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">
+                                    {% trans "No assessment components configured" %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-lightning me-2"></i>{% trans "Quick Actions" %}</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'teacher_portal:teacher_course_students' offering.pk %}" class="btn btn-outline-primary">
+                        <i class="bi bi-people me-2"></i>{% trans "View Students" %}
+                    </a>
+                    <a href="{% url 'teacher_portal:teacher_attendance_entry' offering.pk %}" class="btn btn-outline-success">
+                        <i class="bi bi-calendar-check me-2"></i>{% trans "Take Attendance" %}
+                    </a>
+                    <a href="{% url 'teacher_portal:teacher_marks_entry' offering.pk %}" class="btn btn-outline-info">
+                        <i class="bi bi-pencil me-2"></i>{% trans "Enter Marks" %}
+                    </a>
+                    {% if offering.status == 'grading' %}
+                    <a href="{% url 'teacher_portal:teacher_grade_submit' offering.pk %}" class="btn btn-outline-warning">
+                        <i class="bi bi-check-circle me-2"></i>{% trans "Submit Grades" %}
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'teacher_portal:teacher_course_analytics' offering.pk %}" class="btn btn-outline-dark">
+                        <i class="bi bi-graph-up me-2"></i>{% trans "View Analytics" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% if offering.syllabus %}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-file-earmark me-2"></i>{% trans "Course Materials" %}</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ offering.syllabus.url }}" class="btn btn-outline-secondary w-100" target="_blank">
+                    <i class="bi bi-download me-2"></i>{% trans "Download Syllabus" %}
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

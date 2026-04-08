@@ -1,0 +1,46 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Delete Department" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_departments' %}">{% trans "Departments" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Delete" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>{% trans "Confirm Delete" %}</h5>
+            </div>
+            <div class="card-body text-center">
+                <i class="bi bi-building display-1 text-danger mb-3"></i>
+                <h4>{% trans "Delete Department" %}</h4>
+                <p class="text-muted">
+                    {% trans "Are you sure you want to delete the department:" %}<br>
+                    <strong>{{ object.name_en }}</strong> ({{ object.code }})
+                </p>
+                <p class="text-danger">
+                    <i class="bi bi-exclamation-circle me-1"></i>
+                    {% trans "This action cannot be undone!" %}
+                </p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-center gap-2 mt-4">
+                        <a href="{% url 'admin_portal:admin_departments' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-lg me-1"></i>{% trans "Cancel" %}
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i>{% trans "Delete" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

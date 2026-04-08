@@ -1,0 +1,58 @@
+{% extends 'teacher_portal/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Delete Announcement' %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_dashboard' %}">{% trans 'Dashboard' %}</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_announcements' %}">{% trans 'Announcements' %}</a></li>
+                    <li class="breadcrumb-item active">{% trans 'Delete' %}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> {% trans 'Confirm Deletion' %}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="lead">
+                        {% trans 'Are you sure you want to delete this announcement?' %}
+                    </p>
+                    <div class="alert alert-light border">
+                        <h5>"{{ object.title }}"</h5>
+                        <p class="mb-0 text-muted">{{ object.content|truncatewords:30 }}</p>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <h6 class="alert-heading">{% trans 'Warning!' %}</h6>
+                        <p class="mb-0">{% trans 'This action cannot be undone. The announcement will be permanently removed and students will no longer see it.' %}</p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'teacher_portal:teacher_announcements' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> {% trans 'Cancel' %}
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> {% trans 'Delete Permanently' %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'teacher_portal/base.html' %}
+{% load i18n %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_dashboard' %}">{% trans 'Dashboard' %}</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_announcements' %}">{% trans 'Announcements' %}</a></li>
+                    <li class="breadcrumb-item active">{{ title }}</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">{{ title }}</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label for="{{ form.title.id_for_label }}" class="form-label">{% trans 'Announcement Title' %} *</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.title.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.target_audience.id_for_label }}" class="form-label">{% trans 'Target Course' %}</label>
+                            {{ form.target_audience }}
+                            {% if form.target_audience.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.target_audience.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted">{% trans 'Select a specific course or leave empty to target all your students' %}</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="{{ form.content.id_for_label }}" class="form-label">{% trans 'Content' %} *</label>
+                            {{ form.content }}
+                            {% if form.content.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.content.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.is_active }}
+                                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                                    {% trans 'Active' %}
+                                </label>
+                            </div>
+                            <small class="form-text text-muted">{% trans 'Only active announcements are visible to students' %}</small>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'teacher_portal:teacher_announcements' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> {% trans 'Cancel' %}
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> {% trans 'Save Announcement' %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

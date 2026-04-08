@@ -1,0 +1,108 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Teachers" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Teachers" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Teacher Management" %}</h2>
+    <a href="{% url 'admin_portal:admin_teacher_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-lg me-1"></i>{% trans "Add Teacher" %}
+    </a>
+</div>
+
+<!-- Teachers Table -->
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>{% trans "Teacher ID" %}</th>
+                        <th>{% trans "Name" %}</th>
+                        <th>{% trans "Department" %}</th>
+                        <th>{% trans "Title" %}</th>
+                        <th>{% trans "Specialization" %}</th>
+                        <th>{% trans "Academic Status" %}</th>
+                        <th>{% trans "Account Status" %}</th>
+                        <th>{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for teacher in teachers %}
+                    <tr>
+                        <td>{{ teacher.teacher_no }}</td>
+                        <td>{{ teacher.user.get_full_name }}</td>
+                        <td>{{ teacher.department.code }}</td>
+                        <td>{{ teacher.get_title_display }}</td>
+                        <td>{{ teacher.specialization|truncatechars:30 }}</td>
+                        <td>
+                            {% if teacher.status == 'active' %}
+                            <span class="badge bg-success">{% trans "Active" %}</span>
+                            {% else %}
+                            <span class="badge bg-secondary">{{ teacher.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if teacher.user.status == 'active' %}
+                            <span class="badge bg-success">{% trans "Activated" %}</span>
+                            {% elif teacher.user.status == 'pending' %}
+                            <span class="badge bg-warning text-dark">{% trans "Pending Activation" %}</span>
+                            {% else %}
+                            <span class="badge bg-secondary">{{ teacher.user.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'admin_portal:admin_teacher_detail' teacher.pk %}" class="btn btn-outline-primary" title="{% trans 'View' %}">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{% url 'admin_portal:admin_teacher_edit' teacher.pk %}" class="btn btn-outline-secondary" title="{% trans 'Edit' %}">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a href="{% url 'admin_portal:admin_teacher_delete' teacher.pk %}" class="btn btn-outline-danger" title="{% trans 'Delete' %}">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-4">
+                            <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                            {% trans "No teachers found" %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% trans "Previous" %}</a>
+        </li>
+        {% endif %}
+        <li class="page-item active">
+            <span class="page-link">{% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}</span>
+        </li>
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans "Next" %}</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

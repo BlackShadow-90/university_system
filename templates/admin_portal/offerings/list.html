@@ -1,0 +1,96 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Course Offerings" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Course Offerings" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Course Offerings" %}</h2>
+    <a href="{% url 'admin_portal:admin_offering_create' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i>{% trans "Add Course Offering" %}
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        {% if grouped_offerings %}
+            {% for group in grouped_offerings %}
+            <div class="mb-4">
+                <div class="d-flex align-items-center mb-3">
+                    <h5 class="mb-0 me-3">
+                        <i class="bi bi-book me-2"></i>{{ group.course.code }} - {{ group.course.get_title }}
+                    </h5>
+                    <span class="badge bg-info">{{ group.offerings|length }} {% trans "offering(s)" %}</span>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>{% trans "Semester" %}</th>
+                                <th>{% trans "Section" %}</th>
+                                <th>{% trans "Instructor" %}</th>
+                                <th>{% trans "Schedule" %}</th>
+                                <th>{% trans "Status" %}</th>
+                                <th>{% trans "Actions" %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for offering in group.offerings %}
+                            <tr>
+                                <td>{{ offering.semester.name_en }}</td>
+                                <td>{{ offering.section_name|default:"-" }}</td>
+                                <td>{{ offering.teacher.user.get_full_name|default:"-" }}</td>
+                                <td>
+                                    {% if offering.day_of_week %}
+                                        {{ offering.get_day_of_week_display }}<br>
+                                        <small class="text-muted">
+                                            {{ offering.start_time|time:"H:i"|default:"-" }} - {{ offering.end_time|time:"H:i"|default:"-" }}
+                                        </small>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-{% if offering.status == 'open' %}success{% elif offering.status == 'in_progress' %}primary{% elif offering.status == 'completed' %}secondary{% elif offering.status == 'cancelled' %}danger{% else %}warning{% endif %}">
+                                        {{ offering.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'admin_portal:admin_offering_components' offering.pk %}" class="btn btn-outline-info" title="{% trans 'Assessment Components' %}">
+                                            <i class="bi bi-clipboard-check"></i>
+                                        </a>
+                                        <a href="{% url 'admin_portal:admin_offering_edit' offering.pk %}" class="btn btn-outline-primary" title="{% trans 'Edit' %}">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'admin_portal:admin_offering_delete' offering.pk %}" class="btn btn-outline-danger" title="{% trans 'Delete' %}">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% if not forloop.last %}<hr>{% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-calendar-event display-4 d-block mb-2"></i>
+                <p>{% trans "No course offerings found" %}</p>
+                <a href="{% url 'admin_portal:admin_offering_create' %}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i>{% trans "Add First Offering" %}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

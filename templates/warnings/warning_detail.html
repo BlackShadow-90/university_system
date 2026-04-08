@@ -1,0 +1,456 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Warning Details" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_dashboard' %}">{% trans "Teacher Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:at_risk_students' %}">{% trans "At-Risk Students" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Warning Details" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Warning Details" %}</h2>
+    <div>
+        <a href="{% url 'warnings:warning_statistics' %}" class="btn btn-outline-info btn-sm me-2">
+            <i class="bi bi-graph-up me-1"></i>{% trans "Statistics" %}
+        </a>
+        {% if not resolution %}
+        <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#resolveModal">
+            <i class="bi bi-check-circle me-1"></i>{% trans "Resolve" %}
+        </button>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Warning Status Card -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card border-{% if warning.warning_level == 'red' %}danger{% elif warning.warning_level == 'orange' %}warning{% else %}info{% endif %}">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <span class="badge bg-{% if warning.warning_level == 'red' %}danger{% elif warning.warning_level == 'orange' %}warning{% elif warning.warning_level == 'yellow' %}info{% else %}success{% endif %} me-2">
+                        {{ warning.get_warning_level_display }}
+                    </span>
+                    {{ warning.student.get_full_name }} - {{ warning.student.student_no }}
+                </h5>
+                <span class="text-muted">{{ warning.semester.display_name }}</span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>{% trans "Risk Score:" %}</strong> {{ warning.risk_score }}%</p>
+                        <p><strong>{% trans "Acknowledged:" %}</strong> 
+                            {% if warning.is_acknowledged %}
+                                <span class="badge bg-success">{% trans "Yes" %}</span> ({{ warning.acknowledged_at|date:"M d, Y" }})
+                            {% else %}
+                                <span class="badge bg-warning">{% trans "No" %}</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>{% trans "Generated:" %}</strong> {{ warning.generated_at|date:"M d, Y H:i" }}</p>
+                        <p><strong>{% trans "Last Updated:" %}</strong> {{ warning.updated_at|date:"M d, Y H:i" }}</p>
+                    </div>
+                </div>
+                
+                {% if warning.recommendations %}
+                <div class="mt-3">
+                    <h6>{% trans "Recommendations:" %}</h6>
+                    <ul class="list-group list-group-flush">
+                        {% for rec in warning.get_recommendations_list %}
+                        <li class="list-group-item"><i class="bi bi-check-circle text-primary me-2"></i>{{ rec }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#escalateModal">
+                    <i class="bi bi-arrow-up-circle me-1"></i>{% trans "Escalate/De-escalate" %}
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#notifyModal">
+                    <i class="bi bi-envelope me-1"></i>{% trans "Notify Parents" %}
+                </button>
+                <button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal" data-bs-target="#evidenceModal">
+                    <i class="bi bi-paperclip me-1"></i>{% trans "Add Evidence" %}
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <!-- Risk Score Breakdown -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-graph-up me-2"></i>{% trans "Risk Breakdown" %}</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-2 d-flex justify-content-between">
+                    <span>{% trans "Attendance:" %}</span>
+                    <span class="badge bg-secondary">{{ warning.attendance_risk_score }}</span>
+                </div>
+                <div class="mb-2 d-flex justify-content-between">
+                    <span>{% trans "GPA:" %}</span>
+                    <span class="badge bg-secondary">{{ warning.gpa_risk_score }}</span>
+                </div>
+                <div class="mb-2 d-flex justify-content-between">
+                    <span>{% trans "Course Failures:" %}</span>
+                    <span class="badge bg-secondary">{{ warning.course_failure_risk_score }}</span>
+                </div>
+                <div class="mb-2 d-flex justify-content-between">
+                    <span>{% trans "Trend:" %}</span>
+                    <span class="badge bg-secondary">{{ warning.trend_risk_score }}</span>
+                </div>
+                <div class="mb-2 d-flex justify-content-between">
+                    <span>{% trans "Missing Assessment:" %}</span>
+                    <span class="badge bg-secondary">{{ warning.missing_assessment_risk_score }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Timeline -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>{% trans "Warning Timeline" %}</h5>
+            </div>
+            <div class="card-body">
+                <div class="timeline">
+                    {% for event in timeline %}
+                    <div class="timeline-item mb-3 pb-3 border-bottom">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted small">{{ event.date|date:"M d, Y H:i" }}</span>
+                            {% if event.level %}
+                            <span class="badge bg-{% if event.level == 'red' %}danger{% elif event.level == 'orange' %}warning{% elif event.level == 'yellow' %}info{% else %}success{% endif %}">
+                                {{ event.level|title }}
+                            </span>
+                            {% endif %}
+                        </div>
+                        <h6 class="mt-1 mb-1">{{ event.title }}</h6>
+                        {% if event.description %}
+                        <p class="text-muted small mb-1">{{ event.description }}</p>
+                        {% endif %}
+                        {% if event.user %}
+                        <small class="text-muted">{% trans "By:" %} {{ event.user }}</small>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center">{% trans "No timeline events yet." %}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Interventions -->
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-tools me-2"></i>{% trans "Interventions" %}</h5>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#interventionModal">
+                    <i class="bi bi-plus-lg me-1"></i>{% trans "Add" %}
+                </button>
+            </div>
+            <div class="card-body">
+                {% for intervention in interventions %}
+                <div class="intervention-card mb-3 p-3 border rounded">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1">{{ intervention.get_intervention_type_display }}</h6>
+                            <p class="text-muted small mb-1">{{ intervention.description|truncatewords:20 }}</p>
+                            <div class="small text-muted">
+                                {% trans "Status:" %} 
+                                <span class="badge bg-{% if intervention.status == 'completed' %}success{% elif intervention.status == 'in_progress' %}primary{% else %}secondary{% endif %}">
+                                    {{ intervention.get_status_display }}
+                                </span>
+                                {% if intervention.is_effective is not None %}
+                                    | {% trans "Effective:" %} 
+                                    {% if intervention.is_effective %}
+                                        <i class="bi bi-check-circle text-success"></i>
+                                    {% else %}
+                                        <i class="bi bi-x-circle text-danger"></i>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if intervention.status != 'completed' %}
+                        <button type="button" class="btn btn-outline-success btn-sm" data-bs-toggle="modal" data-bs-target="#completeInterventionModal{{ intervention.pk }}">
+                            {% trans "Complete" %}
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-muted text-center">{% trans "No interventions yet. Add one to help the student." %}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Evidence Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-folder me-2"></i>{% trans "Evidence & Documentation" %}</h5>
+                <span class="badge bg-secondary">{{ evidence|length }} {% trans "items" %}</span>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for ev in evidence %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h6 class="card-title">{{ ev.title }}</h6>
+                                <span class="badge bg-info mb-2">{{ ev.get_evidence_type_display }}</span>
+                                <p class="card-text small text-muted">{{ ev.description|truncatewords:15 }}</p>
+                                <small class="text-muted">{% trans "Captured:" %} {{ ev.captured_at|date:"M d, Y" }}</small>
+                                {% if ev.file_attachment %}
+                                <div class="mt-2">
+                                    <a href="{{ ev.file_attachment.url }}" class="btn btn-outline-primary btn-sm" target="_blank">
+                                        <i class="bi bi-download me-1"></i>{% trans "Download" %}
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12">
+                        <p class="text-muted text-center">{% trans "No evidence uploaded yet." %}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Resolution Section -->
+{% if resolution %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-success">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-check-circle me-2"></i>{% trans "Resolution" %}</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>{% trans "Resolution Type:" %}</strong> {{ resolution.get_resolution_type_display }}</p>
+                        <p><strong>{% trans "Resolved By:" %}</strong> {{ resolution.resolved_by.get_full_name }}</p>
+                        <p><strong>{% trans "Resolved Date:" %}</strong> {{ resolution.created_at|date:"M d, Y" }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>{% trans "Resolution Notes:" %}</h6>
+                        <p>{{ resolution.resolution_notes }}</p>
+                        {% if resolution.improvement_metrics %}
+                        <h6>{% trans "Improvement Metrics:" %}</h6>
+                        <ul class="list-unstyled">
+                            {% for key, value in resolution.improvement_metrics.items %}
+                            <li><small>{{ key }}: {{ value }}</small></li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Modals -->
+<!-- Add Intervention Modal -->
+<div class="modal fade" id="interventionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{% url 'warnings:create_intervention' warning.pk %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">{% trans "Add Intervention" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Intervention Type" %}</label>
+                        <select name="intervention_type" class="form-select" required>
+                            {% for value, label in intervention_types %}
+                            <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Description" %}</label>
+                        <textarea name="description" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Scheduled Date" %}</label>
+                        <input type="datetime-local" name="scheduled_date" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-primary">{% trans "Add Intervention" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Escalate Modal -->
+<div class="modal fade" id="escalateModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{% url 'warnings:escalate_warning' warning.pk %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">{% trans "Change Warning Level" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "New Level" %}</label>
+                        <select name="new_level" class="form-select" required>
+                            <option value="green">{% trans "Green - Stable" %}</option>
+                            <option value="yellow">{% trans "Yellow - Mild Warning" %}</option>
+                            <option value="orange">{% trans "Orange - Serious Warning" %}</option>
+                            <option value="red">{% trans "Red - Critical Warning" %}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Reason/Notes" %}</label>
+                        <textarea name="reason" class="form-control" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-warning">{% trans "Update Level" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Resolve Modal -->
+<div class="modal fade" id="resolveModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{% url 'warnings:resolve_warning' warning.pk %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">{% trans "Resolve Warning" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Resolution Type" %}</label>
+                        <select name="resolution_type" class="form-select" required>
+                            <option value="improved_performance">{% trans "Improved Performance" %}</option>
+                            <option value="attendance_recovered">{% trans "Attendance Recovered" %}</option>
+                            <option value="completed_intervention">{% trans "Completed Intervention Program" %}</option>
+                            <option value="withdrawal_approved">{% trans "Course Withdrawal Approved" %}</option>
+                            <option value="semester_completed">{% trans "Semester Completed" %}</option>
+                            <option value="other">{% trans "Other" %}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Resolution Notes" %}</label>
+                        <textarea name="resolution_notes" class="form-control" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-success">{% trans "Resolve Warning" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Evidence Modal -->
+<div class="modal fade" id="evidenceModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{% url 'warnings:add_evidence' warning.pk %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">{% trans "Add Evidence" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Evidence Type" %}</label>
+                        <select name="evidence_type" class="form-select" required>
+                            <option value="attendance_record">{% trans "Attendance Record" %}</option>
+                            <option value="grade_record">{% trans "Grade Record" %}</option>
+                            <option value="assignment_missing">{% trans "Missing Assignment" %}</option>
+                            <option value="teacher_observation">{% trans "Teacher Observation" %}</option>
+                            <option value="behavioral_report">{% trans "Behavioral Report" %}</option>
+                            <option value="screenshot">{% trans "Screenshot" %}</option>
+                            <option value="document">{% trans "Document" %}</option>
+                            <option value="other">{% trans "Other" %}</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Title" %}</label>
+                        <input type="text" name="title" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Description" %}</label>
+                        <textarea name="description" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "File Attachment" %}</label>
+                        <input type="file" name="file_attachment" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-primary">{% trans "Add Evidence" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Notify Parents Modal -->
+<div class="modal fade" id="notifyModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{% url 'warnings:notify_parents' warning.pk %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">{% trans "Notify Parents/Guardians" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">{% trans "Notification Type" %}</label>
+                        <select name="notification_type" class="form-select">
+                            <option value="new_warning">{% trans "New Warning" %}</option>
+                            <option value="escalation">{% trans "Escalation" %}</option>
+                            <option value="improvement">{% trans "Improvement Update" %}</option>
+                            <option value="resolution">{% trans "Resolution" %}</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        {% trans "This will send an email/SMS to the parent contact on file for this student." %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-primary">{% trans "Send Notification" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,246 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Bulk Enrollment" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_enrollments' %}">{% trans "Enrollments" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Bulk Enrollment" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Bulk Student Enrollment" %}</h2>
+    <a href="{% url 'admin_portal:admin_enrollments' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>{% trans "Back to Enrollments" %}
+    </a>
+</div>
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %}
+{% endif %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-people-fill me-2"></i>{% trans "Enroll Multiple Students" %}
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post" id="bulkEnrollmentForm">
+                    {% csrf_token %}
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="course_offering" class="form-label">{% trans "Select Course" %} *</label>
+                            <select class="form-select" id="course_offering" name="course_offering" required>
+                                <option value="">{% trans "Choose a course..." %}</option>
+                                {% for offering in course_offerings %}
+                                <option value="{{ offering.pk }}">
+                                    {{ offering.course.code }} - {{ offering.course.get_title }} 
+                                    ({{ offering.semester }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">{% trans "Course Info" %}</label>
+                            <div class="alert alert-info mb-0" id="courseInfo" style="display: none;">
+                                <small id="courseDetails"></small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <label class="form-label mb-0">{% trans "Select Students" %} *</label>
+                                <div>
+                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="selectAllStudents()">
+                                        {% trans "Select All" %}
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" onclick="deselectAllStudents()">
+                                        {% trans "Deselect All" %}
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-light sticky-top">
+                                        <tr>
+                                            <th width="40">
+                                                <input type="checkbox" id="selectAllCheckbox" onchange="toggleAllStudents()">
+                                            </th>
+                                            <th>{% trans "Student ID" %}</th>
+                                            <th>{% trans "Name" %}</th>
+                                            <th>{% trans "Department" %}</th>
+                                            <th>{% trans "Program" %}</th>
+                                            <th>{% trans "Status" %}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for student in students %}
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" name="students" value="{{ student.pk }}" 
+                                                       class="student-checkbox" onchange="updateSelectAllCheckbox()">
+                                            </td>
+                                            <td>{{ student.student_no }}</td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    {% if student.user.avatar %}
+                                                    <img src="{{ student.user.avatar.url }}" class="rounded-circle me-2" width="24" height="24" alt="{{ student.user.get_full_name }}">
+                                                    {% endif %}
+                                                    {{ student.user.get_full_name }}
+                                                </div>
+                                            </td>
+                                            <td>{{ student.department.get_name }}</td>
+                                            <td>{{ student.program.get_name }}</td>
+                                            <td>
+                                                <span class="badge {% if student.status == 'active' %}bg-success{% else %}bg-secondary{% endif %}">
+                                                    {{ student.get_status_display }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted py-4">
+                                                <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                                                {% trans "No active students found" %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-muted">
+                                    <span id="selectedCount">0</span> {% trans "students selected" %}
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-secondary me-2" onclick="clearForm()">
+                                        <i class="bi bi-x-circle me-1"></i>{% trans "Clear" %}
+                                    </button>
+                                    <button type="submit" class="btn btn-primary" id="submitBtn" disabled>
+                                        <i class="bi bi-check-circle me-1"></i>{% trans "Enroll Selected Students" %}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ course_offerings_data|json_script:"course-data" }}
+<script>
+const courseData = JSON.parse(document.getElementById('course-data').textContent);
+
+function updateCourseInfo() {
+    const courseId = document.getElementById('course_offering').value;
+    const courseInfo = document.getElementById('courseInfo');
+    const courseDetails = document.getElementById('courseDetails');
+    
+    if (courseId && courseData[courseId]) {
+        const data = courseData[courseId];
+        courseDetails.innerHTML = `
+            <strong>${data.code} - ${data.course}</strong><br>
+            {% trans "Semester:" %} ${data.semester}<br>
+            {% trans "Credits:" %} ${data.credits}<br>
+            {% trans "Instructor:" %} ${data.instructor}
+        `;
+        courseInfo.style.display = 'block';
+    } else {
+        courseInfo.style.display = 'none';
+    }
+}
+
+function selectAllStudents() {
+    const checkboxes = document.querySelectorAll('.student-checkbox');
+    checkboxes.forEach(cb => cb.checked = true);
+    updateSelectedCount();
+    updateSelectAllCheckbox();
+}
+
+function deselectAllStudents() {
+    const checkboxes = document.querySelectorAll('.student-checkbox');
+    checkboxes.forEach(cb => cb.checked = false);
+    updateSelectedCount();
+    updateSelectAllCheckbox();
+}
+
+function toggleAllStudents() {
+    const selectAll = document.getElementById('selectAllCheckbox').checked;
+    const checkboxes = document.querySelectorAll('.student-checkbox');
+    checkboxes.forEach(cb => cb.checked = selectAll);
+    updateSelectedCount();
+    updateSelectAllCheckbox();
+}
+
+function updateSelectAllCheckbox() {
+    const checkboxes = document.querySelectorAll('.student-checkbox');
+    const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');
+    const selectAllCheckbox = document.getElementById('selectAllCheckbox');
+    
+    if (checkboxes.length === 0) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+    } else if (checkedBoxes.length === 0) {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = false;
+    } else if (checkedBoxes.length === checkboxes.length) {
+        selectAllCheckbox.checked = true;
+        selectAllCheckbox.indeterminate = false;
+    } else {
+        selectAllCheckbox.checked = false;
+        selectAllCheckbox.indeterminate = true;
+    }
+    
+    // Also update the count when individual checkboxes change
+    updateSelectedCount();
+}
+
+function updateSelectedCount() {
+    const checkedBoxes = document.querySelectorAll('.student-checkbox:checked');
+    const count = checkedBoxes.length;
+    document.getElementById('selectedCount').textContent = count;
+    
+    // Enable/disable submit button
+    const submitBtn = document.getElementById('submitBtn');
+    const courseSelected = document.getElementById('course_offering').value;
+    submitBtn.disabled = count === 0 || !courseSelected;
+}
+
+function clearForm() {
+    document.getElementById('bulkEnrollmentForm').reset();
+    deselectAllStudents();
+    updateCourseInfo();
+}
+
+// Event listeners
+document.getElementById('course_offering').addEventListener('change', updateCourseInfo);
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateSelectedCount();
+    updateCourseInfo();
+});
+</script>
+{% endblock %}

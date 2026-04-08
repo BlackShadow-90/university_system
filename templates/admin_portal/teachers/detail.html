@@ -1,0 +1,165 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Teacher Details" %} - {{ teacher.user.get_full_name }} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'admin_portal:admin_teachers' %}">{% trans "Teachers" %}</a></li>
+<li class="breadcrumb-item active">{{ teacher.user.get_full_name }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Teacher Details" %}</h2>
+    <div>
+        <a href="{% url 'admin_portal:admin_teacher_edit' teacher.pk %}" class="btn btn-outline-secondary me-2">
+            <i class="bi bi-pencil me-1"></i>{% trans "Edit" %}
+        </a>
+        <a href="{% url 'admin_portal:admin_teachers' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>{% trans "Back" %}
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Account Information -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-person-circle me-2"></i>{% trans "Account Information" %}</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td width="40%"><strong>{% trans "Email" %}</strong></td>
+                        <td>{{ teacher.user.email }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Full Name (EN)" %}</strong></td>
+                        <td>{{ teacher.user.full_name_en }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Full Name (ZH)" %}</strong></td>
+                        <td>{{ teacher.user.full_name_zh|default:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Phone" %}</strong></td>
+                        <td>{{ teacher.user.phone|default:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Account Status" %}</strong></td>
+                        <td>
+                            {% if teacher.user.status == 'active' %}
+                                <span class="badge bg-success">{% trans "Active" %}</span>
+                            {% elif teacher.user.status == 'pending' %}
+                                <span class="badge bg-warning">{% trans "Pending" %}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ teacher.user.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Employment Information -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-briefcase me-2"></i>{% trans "Employment Information" %}</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td width="40%"><strong>{% trans "Teacher ID" %}</strong></td>
+                        <td>{{ teacher.teacher_no }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Department" %}</strong></td>
+                        <td>{{ teacher.department.name_en|default:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Title" %}</strong></td>
+                        <td>{{ teacher.get_title_display|default:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Join Date" %}</strong></td>
+                        <td>{{ teacher.join_date|default:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Status" %}</strong></td>
+                        <td>
+                            {% if teacher.status == 'active' %}
+                                <span class="badge bg-success">{% trans "Active" %}</span>
+                            {% elif teacher.status == 'on_leave' %}
+                                <span class="badge bg-warning">{% trans "On Leave" %}</span>
+                            {% elif teacher.status == 'retired' %}
+                                <span class="badge bg-secondary">{% trans "Retired" %}</span>
+                            {% else %}
+                                <span class="badge bg-info">{{ teacher.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Contact & Office Info -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>{% trans "Office Information" %}</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td width="40%"><strong>{% trans "Office Location" %}</strong></td>
+                        <td>{{ teacher.office_location|default:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Office Hours" %}</strong></td>
+                        <td>{{ teacher.office_hours|default:"-" }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>{% trans "Specialization" %}</strong></td>
+                        <td>{{ teacher.specialization|default:"-" }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bio -->
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-file-text me-2"></i>{% trans "Biography" %}</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-0">{{ teacher.bio|default:"-"|linebreaks }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+            <small class="text-muted">
+                {% trans "Created" %}: {{ teacher.created_at|date:"Y-m-d H:i"|default:"-" }} | 
+                {% trans "Updated" %}: {{ teacher.updated_at|date:"Y-m-d H:i"|default:"-" }}
+            </small>
+        </div>
+        <div>
+            <a href="{% url 'admin_portal:admin_teacher_delete' teacher.pk %}" class="btn btn-outline-danger btn-sm">
+                <i class="bi bi-trash me-1"></i>{% trans "Delete Teacher" %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

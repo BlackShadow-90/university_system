@@ -1,0 +1,161 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{{ component.name }} - {% trans "Marks Entry" %}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_dashboard' %}">{% trans "Teacher Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_courses' %}">{% trans "My Courses" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_course_detail' offering.pk %}">{{ offering.course.code }}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'teacher_portal:teacher_marks_entry' offering.pk %}">{% trans "Marks" %}</a></li>
+<li class="breadcrumb-item active">{{ component.name }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ component.name }} - {% trans "Marks Entry" %}</h2>
+    <div>
+        <span class="badge bg-primary">{% trans "Max:" %} {{ component.max_score }}</span>
+        <span class="badge bg-info">{% trans "Weight:" %} {{ component.weight_percentage }}%</span>
+    </div>
+</div>
+
+<!-- Processing Pipeline Status -->
+<div class="alert alert-info d-flex align-items-center mb-4">
+    <div class="flex-shrink-0 me-3">
+        <i class="bi bi-arrow-repeat fs-4"></i>
+    </div>
+    <div>
+        <strong>{% trans "After saving marks:" %}</strong>
+        <div class="small">
+            <span class="badge bg-primary me-1">1. {% trans "Validate" %}</span>
+            <span class="badge bg-primary me-1">2. {% trans "Calculate Final Score" %}</span>
+            <span class="badge bg-primary me-1">3. {% trans "Update Warnings" %}</span>
+        </div>
+    </div>
+</div>
+
+<form method="post" action="{% url 'teacher_portal:teacher_component_marks' offering.pk component.pk %}">
+    {% csrf_token %}
+    
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-pencil-square me-2"></i>{% trans "Student Scores" %}</h5>
+            <div class="btn-group btn-group-sm">
+                <button type="button" class="btn btn-outline-secondary" onclick="fillAll('')">
+                    {% trans "Clear All" %}
+                </button>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th width="50">#</th>
+                            <th>{% trans "Student ID" %}</th>
+                            <th>{% trans "Name" %}</th>
+                            <th>{% trans "Score" %} / {{ component.max_score }}</th>
+                            <th>{% trans "Percentage" %}</th>
+                            <th>{% trans "Remarks" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for enrollment in enrollments %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ enrollment.student.student_no }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    {% if enrollment.student.user.avatar %}
+                                    <img src="{{ enrollment.student.user.avatar.url }}" class="rounded-circle me-2" width="32" height="32">
+                                    {% else %}
+                                    <div class="rounded-circle bg-secondary bg-opacity-10 d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px;">
+                                        <i class="bi bi-person text-secondary"></i>
+                                    </div>
+                                    {% endif %}
+                                    {{ enrollment.student.user.get_full_name }}
+                                </div>
+                            </td>
+                            <td>
+                                <input type="number" 
+                                       name="score_{{ enrollment.pk }}" 
+                                       class="form-control form-control-sm score-input" 
+                                       style="width: 100px;"
+                                       min="0" 
+                                       max="{{ component.max_score }}" 
+                                       step="0.01"
+                                       value="{% for s in existing_scores %}{% if s.enrollment_id == enrollment.pk %}{{ s.score }}{% endif %}{% endfor %}"
+                                       data-max="{{ component.max_score }}">
+                            </td>
+                            <td>
+                                <span class="percentage-display text-muted">
+                                    {% for s in existing_scores %}{% if s.enrollment_id == enrollment.pk %}{% if s.percentage %}{{ s.percentage|floatformat:2 }}{% else %}-{% endif %}%{% endif %}{% endfor %}
+                                </span>
+                            </td>
+                            <td>
+                                <input type="text" 
+                                       name="remarks_{{ enrollment.pk }}" 
+                                       class="form-control form-control-sm"
+                                       value="{% for s in existing_scores %}{% if s.enrollment_id == enrollment.pk %}{{ s.remarks|default:'' }}{% endif %}{% endfor %}"
+                                       placeholder="{% trans 'Optional' %}">
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                                {% trans "No students enrolled" %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'teacher_portal:teacher_marks_entry' offering.pk %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>{% trans "Back" %}
+                </a>
+                <div>
+                    <button type="submit" name="action" value="save" class="btn btn-secondary me-2">
+                        <i class="bi bi-save me-1"></i>{% trans "Save as Draft" %}
+                    </button>
+                    <button type="submit" name="action" value="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle me-1"></i>{% trans "Submit Marks" %}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function fillAll(value) {
+    document.querySelectorAll('.score-input').forEach(input => {
+        input.value = value;
+        updatePercentage(input);
+    });
+}
+
+function updatePercentage(input) {
+    const max = parseFloat(input.dataset.max);
+    const score = parseFloat(input.value);
+    const display = input.closest('tr').querySelector('.percentage-display');
+    
+    if (!isNaN(score) && max > 0) {
+        const percentage = (score / max * 100).toFixed(2);
+        display.textContent = percentage + '%';
+    } else {
+        display.textContent = '-%';
+    }
+}
+
+document.querySelectorAll('.score-input').forEach(input => {
+    input.addEventListener('input', () => updatePercentage(input));
+});
+</script>
+{% endblock %}

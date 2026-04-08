@@ -1,0 +1,142 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Course Attendance" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="{% url 'student_portal:student_dashboard' %}">{% trans "Dashboard" %}</a></li>
+<li class="breadcrumb-item"><a href="{% url 'student_portal:student_attendance' %}">{% trans "Attendance" %}</a></li>
+<li class="breadcrumb-item active">{{ enrollment.course_offering.course.code }}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ enrollment.course_offering.course.name }} - {% trans "Attendance" %}</h2>
+    <a href="{% url 'student_portal:student_attendance' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>{% trans "All Courses" %}
+    </a>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card {% if attendance_rate >= 80 %}bg-success{% elif attendance_rate >= 60 %}bg-warning{% else %}bg-danger{% endif %} text-white">
+            <div class="card-body text-center">
+                <h6 class="card-title">{% trans "Attendance Rate" %}</h6>
+                <h3>{{ attendance_rate|default:"0" }}%</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-success text-white">
+            <div class="card-body text-center">
+                <h6 class="card-title">{% trans "Present" %}</h6>
+                <h3>{{ present_count|default:"0" }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-danger text-white">
+            <div class="card-body text-center">
+                <h6 class="card-title">{% trans "Absent" %}</h6>
+                <h3>{{ absent_count|default:"0" }}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card bg-warning text-dark">
+            <div class="card-body text-center">
+                <h6 class="card-title">{% trans "Late" %}</h6>
+                <h3>{{ late_count|default:"0" }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Attendance Records -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">{% trans "Attendance Records" %}</h5>
+    </div>
+    <div class="card-body">
+        {% if attendance_records %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>{% trans "Date" %}</th>
+                            <th>{% trans "Status" %}</th>
+                            <th>{% trans "Notes" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in attendance_records %}
+                        <tr>
+                            <td>{{ record.attendance_date|date:"Y-m-d" }}</td>
+                            <td>
+                                <span class="badge {% if record.status == 'present' %}bg-success{% elif record.status == 'absent' %}bg-danger{% elif record.status == 'late' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                    {{ record.get_status_display }}
+                                </span>
+                            </td>
+                            <td>{{ record.notes|default:"-" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="bi bi-calendar-x display-4 text-muted"></i>
+                <p class="text-muted mt-3">{% trans "No attendance records available" %}</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Attendance Stats -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">{% trans "Statistics" %}</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h6>{% trans "Summary" %}</h6>
+                <table class="table table-borderless">
+                    <tr>
+                        <td>{% trans "Total Sessions:" %}</td>
+                        <td><strong>{{ total_sessions|default:"0" }}</strong></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "Present:" %}</td>
+                        <td><span class="text-success">{{ present_count|default:"0" }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "Absent:" %}</td>
+                        <td><span class="text-danger">{{ absent_count|default:"0" }}</span></td>
+                    </tr>
+                    <tr>
+                        <td>{% trans "Late:" %}</td>
+                        <td><span class="text-warning">{{ late_count|default:"0" }}</span></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <h6>{% trans "Requirements" %}</h6>
+                <p class="text-muted">{% trans "Minimum attendance requirement: 80%" %}</p>
+                {% if attendance_rate < 80 %}
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                        {% trans "Your attendance is below the required minimum. Please improve your attendance to avoid academic penalties." %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle-fill me-1"></i>
+                        {% trans "Your attendance meets the minimum requirement. Keep it up!" %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

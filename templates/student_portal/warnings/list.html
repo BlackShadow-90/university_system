@@ -1,0 +1,70 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Warning Center" %} - {{ site_name }}{% endblock %}
+
+{% block breadcrumb_items %}
+<li class="breadcrumb-item"><a href="/student-portal/">{% trans "Student Dashboard" %}</a></li>
+<li class="breadcrumb-item active">{% trans "Warning Center" %}</li>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{% trans "Warning Center" %}</h2>
+</div>
+
+<!-- Warnings List -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>{% trans "Academic Warnings" %}</h5>
+    </div>
+    <div class="card-body">
+        {% for warning in warnings %}
+        <div class="alert alert-{% if warning.warning_level == 'red' %}danger{% elif warning.warning_level == 'orange' %}warning{% else %}info{% endif %} d-flex align-items-start">
+            <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
+            <div class="flex-grow-1">
+                <h6 class="alert-heading mb-1">
+                    {% if warning.warning_level == 'red' %}
+                    {% trans "Critical Warning" %}
+                    {% elif warning.warning_level == 'orange' %}
+                    {% trans "High Risk Warning" %}
+                    {% else %}
+                    {% trans "Attention Required" %}
+                    {% endif %}
+                    - {{ warning.semester.display_name }}
+                </h6>
+                <p class="mb-1">{{ warning.get_warning_message }}</p>
+                {% if warning.risk_factors %}
+                <ul class="list-unstyled mb-2 small">
+                    {% for factor in warning.risk_factors %}
+                    {% if factor.name or factor.description %}
+                    <li><i class="bi bi-dot"></i>{% if factor.name %}<strong>{{ factor.name }}:</strong>{% endif %} {{ factor.description }}</li>
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <small class="text-muted">{% trans "Generated" %}: {{ warning.generated_at|date:"M d, Y" }}</small>
+                {% if not warning.is_acknowledged %}
+                <form action="{% url 'student_portal:student_acknowledge_warning' warning.pk %}" method="post" class="mt-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-check me-1"></i>{% trans "Acknowledge" %}
+                    </button>
+                </form>
+                {% else %}
+                <div class="mt-2">
+                    <span class="badge bg-success"><i class="bi bi-check me-1"></i>{% trans "Acknowledged" %}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center text-muted py-4">
+            <i class="bi bi-shield-check display-4 d-block mb-2 text-success"></i>
+            <h5>{% trans "No Warnings" %}</h5>
+            <p>{% trans "You have no academic warnings at this time. Keep up the good work!" %}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
