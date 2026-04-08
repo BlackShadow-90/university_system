@@ -10,3 +10,4 @@ whitenoise>=6.6.0
 ReportLab>=4.0.0
 openpyxl>=3.1.0
 sentry-sdk>=1.39.0
+dj-database-url>=2.1.0

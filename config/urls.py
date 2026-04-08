@@ -8,7 +8,12 @@ from django.conf.urls.static import static
 from django.shortcuts import render, redirect
 from django.conf.urls.i18n import i18n_patterns
 from django.utils.translation import activate
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
+
+
+def health_check(request):
+    """Simple health check for Railway"""
+    return HttpResponse("University System is running successfully!")
 
 
 def landing_page(request):
@@ -74,11 +79,12 @@ def set_language(request):
 
 
 urlpatterns = [
+    path('', health_check, name='health_check'),  # Railway health check
     path('admin/', admin.site.urls),
     path('i18n/', include('django.conf.urls.i18n')),
     path('set-language/', set_language, name='set_language'),
     path('debug-i18n/', debug_i18n, name='debug_i18n'),
-    path('', root_redirect, name='root_redirect'),
+    path('landing/', root_redirect, name='root_redirect'),
     # Explicit patterns for language root paths (to avoid 404s)
     path('en/', landing_page, name='landing_en'),
     path('zh-hans/', landing_page, name='landing_zh'),

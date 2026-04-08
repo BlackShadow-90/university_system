@@ -20,7 +20,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key')
 
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
 
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -100,14 +100,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.asgi.application'
 
+# Database configuration for Railway MySQL
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME', 'university_system'),
-        'USER': os.getenv('DB_USER', 'root'),
-        'PASSWORD': os.getenv('DB_PASSWORD', '12345'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '3306'),
+        'NAME': os.getenv('MYSQLDATABASE', os.getenv('DB_NAME', 'university_system')),
+        'USER': os.getenv('MYSQLUSER', os.getenv('DB_USER', 'root')),
+        'PASSWORD': os.getenv('MYSQLPASSWORD', os.getenv('DB_PASSWORD', '12345')),
+        'HOST': os.getenv('MYSQLHOST', os.getenv('DB_HOST', 'localhost')),
+        'PORT': os.getenv('MYSQLPORT', os.getenv('DB_PORT', '3306')),
         'OPTIONS': {
             'charset': 'utf8mb4',
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
