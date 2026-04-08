@@ -10,6 +10,10 @@ try:
 except ImportError:
     pass
 
+# Use PyMySQL instead of mysqlclient
+import pymysql
+pymysql.install_as_MySQLdb()
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-default-key')
