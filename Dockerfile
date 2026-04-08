@@ -9,7 +9,7 @@ RUN apt-get update && \
         default-libmysqlclient-dev \
         build-essential \
         libmariadb-dev \
-        libmariadbclient-dev \
+        libmariadb-dev-compat \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy and install Python dependencies
