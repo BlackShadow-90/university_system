@@ -14,7 +14,7 @@ RUN apt-get update && \
 
 # Copy and install Python dependencies
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN echo "Build timestamp: $(date)" && pip install -r requirements.txt
 
 # Copy application code
 COPY . .
